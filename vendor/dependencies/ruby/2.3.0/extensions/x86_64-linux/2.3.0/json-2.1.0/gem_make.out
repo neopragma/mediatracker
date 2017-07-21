@@ -1,0 +1,13 @@
+current directory: /home/neopragma/projects/mediatracker/vendor/dependencies/ruby/2.3.0/gems/json-2.1.0/ext/json
+/usr/bin/ruby2.3 -r ./siteconf20170721-20167-1eo4ze0.rb extconf.rb
+creating Makefile
+
+current directory: /home/neopragma/projects/mediatracker/vendor/dependencies/ruby/2.3.0/gems/json-2.1.0/ext/json
+make "DESTDIR=" clean
+
+current directory: /home/neopragma/projects/mediatracker/vendor/dependencies/ruby/2.3.0/gems/json-2.1.0/ext/json
+make "DESTDIR="
+make: Nothing to be done for 'all'.
+
+current directory: /home/neopragma/projects/mediatracker/vendor/dependencies/ruby/2.3.0/gems/json-2.1.0/ext/json
+make "DESTDIR=" install

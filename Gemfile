@@ -4,11 +4,13 @@ gem 'rack'
 gem 'sinatra'
 gem 'activesupport'
 gem 'json'
+gem 'sequel'
+gem 'sqlite3'
 
 group :test do
-    gem 'rake'
-    gem 'rspec'
-    gem 'rack-test'
-    gem 'cucumber'
-    gem 'rest-client'
+  gem 'rake'
+  gem 'rspec'
+  gem 'rack-test'
+  gem 'cucumber'
+  gem 'rest-client'
 end

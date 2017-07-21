@@ -1,0 +1,14 @@
+export PROJECT_NAME=mediatracker
+echo "PROJECT_NAME=$PROJECT_NAME"
+export PROJECT_ROOT="$HOME/projects/$PROJECT_NAME"
+echo "PROJECT_ROOT=$PROJECT_ROOT"
+export SEQUEL_LOG="$PROJECT_ROOT/logs/sequel.log"
+echo "SEQUEL_LOG=$SEQUEL_LOG"
+export ENVIRONMENT=dev
+echo "ENVIRONMENT=$ENVIRONMENT"
+export DATABASE_NAME="mediatracker-${ENVIRONMENT}.sqlite3"
+echo "DATABASE_NAME=$DATABASE_NAME"
+export DATABASE_URL="sqlite://db/$DATABASE_NAME"
+echo "DATABASE_URL=$DATABASE_URL"
+export PATH=".:$PROJECT_ROOT/scripts:$PATH"
+echo "PATH=$PATH"

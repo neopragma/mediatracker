@@ -1,0 +1,1 @@
+touch "$PROJECT_ROOT/db/$DATABASE_NAME"
