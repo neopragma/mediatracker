@@ -16,7 +16,7 @@ task :clean do
 end
 
 task :reset_db do
-  ruby "#{ENV['PROJECT_ROOT']}/app/db_init.rb"
+  ruby "#{ENV['PROJECT_ROOT']}/util/db_init.rb"
 end
 
 task :default => :clean_and_run_specs

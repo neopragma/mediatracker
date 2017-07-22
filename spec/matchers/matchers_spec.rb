@@ -51,6 +51,22 @@ RSpec::Matchers.define :be_sorted_by_name_as do |expected|
   end
 end
 
+RSpec::Matchers.define :include_groups do |expected|
+  match do |actual|
+    actual.each do |row|
+      expected.include?({ :group_name => row[:group_name] })
+    end
+  end
+end
+
+RSpec::Matchers.define :include_labels do |expected|
+  match do |actual|
+    actual.each do |row|
+      expected.include?({ :label_name => row[:label_name] })
+    end
+  end
+end
+
 RSpec::Matchers.define :include_people do |expected|
   match do |actual|
     actual.each do |row|

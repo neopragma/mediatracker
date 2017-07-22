@@ -39,6 +39,58 @@ module DbHelpers
     end
   end
 
+  # insert one row into the groups table
+  # group_name is expected to be a string
+  def add_group group_name
+    db.transaction do
+      insert_into(db[:groups], {:group_name => group_name})
+    end
+  end
+
+  # insert multiple rows into the groups table
+  # group_names is expected to be an array of strings
+  def add_groups group_names
+    group_names.each do |group_name|
+      add_group group_name
+    end
+  end
+
+  # return the row for the specified group name
+  def group group_name
+    db[:groups].where(:group_name => group_name).first
+  end
+
+  # return a sequel dataset containing all rows from the groups table, sorted
+  def groups
+    db[:groups].order(:group_name)
+  end
+
+  # insert one row into the group_types table
+  # group_type_name is expected to be a string
+  def add_group_type group_type_name
+    db.transaction do
+      insert_into(db[:group_types], {:group_type_name => group_type_name})
+    end
+  end
+
+  # insert multiple rows into the group_types table
+  # group_type_names is expected to be an array of strings
+  def add_group_types group_type_names
+    group_type_names.each do |group_type_name|
+      add_group_type group_type_name
+    end
+  end
+
+  # return the row for the specified group name
+  def group_type group_type_name
+    db[:group_types].where(:group_type_name => group_type_name).first
+  end
+
+  # return a sequel dataset containing all rows from the group_types table, sorted
+  def group_types
+    db[:group_types].order(:group_type_name)
+  end
+
   # insert one row into the labels table
   # label_name is expected to be a string
   def add_label label_name
@@ -161,6 +213,23 @@ module DbHelpers
     db[:roles].order(:role_name)
   end
 
+  # associate a group with a group type
+  def associate_group_and_group_type values_hash
+    group = group(values_hash[:group_name])
+    raise RuntimeError, "#{values_hash[:group_name]} was not found in table: groups" unless group
+
+    group_type = group_type(values_hash[:group_type_name])
+    raise RuntimeError, "#{values_hash[:group_type_name]} was not found in table: group_types" unless group_type
+
+    db.transaction do
+      db[:groups_group_types].insert({
+        :group_id => group[:id],
+        :group_type_id => group_type[:id]
+      })
+    end
+    db[:groups_group_types].where(:group_id => group[:id], :group_type_id => group_type[:id])
+  end
+
   # associate a recording with a collection
   def associate_collection_and_recording values_hash
     collection = collection(values_hash[:title])
@@ -176,6 +245,40 @@ module DbHelpers
       })
     end
     db[:collections_recordings].where(:collection_id => collection[:id], :recording_id => recording[:id])
+  end
+
+  # associate a piece with a recording
+  def associate_piece_and_recording values_hash
+    piece = pieces_by_title(values_hash[:title], values_hash[:subtitle]).first
+    raise RuntimeError, "Piece entitled #{values_hash[:title]} and subtitled #{values_hash[:subtitle]} not found in table: pieces" unless piece
+
+    recording = recording(values_hash[:filename])
+    raise RuntimeError, "#{values_hash[:filename]} not found in table: recordings" unless recording
+
+    db.transaction do
+      db[:pieces_recordings].insert({
+        :piece_id => piece[:id],
+        :recording_id => recording[:id]
+      })
+    end
+    db[:pieces_recordings].where(:piece_id => piece[:id], :recording_id => recording[:id])
+  end
+
+  # associate a collection with a label
+  def associate_collection_and_label values_hash
+    collection = collection(values_hash[:title])
+    raise RuntimeError, "#{values_hash[:title]} not found in table: collections" unless collection
+
+    label = label(values_hash[:label_name])
+    raise RuntimeError, "#{values_hash[:label_name]} not found in table: labels" unless label
+
+    db.transaction do
+      db[:collections_labels].insert({
+        :collection_id => collection[:id],
+        :label_id => label[:id]
+      })
+    end
+    db[:collections_labels].where(:collection_id => collection[:id], :label_id => label[:id])
   end
 
   # associate a person, role, and piece

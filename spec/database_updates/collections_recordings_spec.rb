@@ -1,4 +1,4 @@
-require_relative "../app/db_helpers"
+require_relative "../../app/db_helpers"
 
 # Expresses behaviors of the collections_recordings association.
 

@@ -1,15 +1,47 @@
 require 'sequel'
 require 'logger'
-require_relative "./db_helpers"
+require_relative "../app/db_helpers"
 
 class DbLoad
   include DbHelpers
 
   def run
+
+    # table: groups
+    [
+      'Philip Jones Brass Ensemble'
+    ].each do |group_name|
+      add_group group_name
+    end
+
+    # table: group_types
+    [
+      'Big Band',
+      'Bluegrass Band',
+      'Chamber Orchestra',
+      'Country Band',
+      'Brass Ensemble',
+      'Brass Quintet',
+      'Concert Band',
+      'Jazz Combo',
+      'Metal Band',
+      'Orchestra',
+      'Pop Band',
+      'Rock Band',
+      'SATB Chorus',
+      'String Orchestra',
+      'String Quartet',
+      'Woodwind Ensemble',
+      'Woodwind Quintet'
+    ]
+
+    # table: groups_group_types
+    #TODO load the groups_group_types table
+
     # table: labels
     #TODO load the labels table
 
-    
+
     # table: people
     [
       [ 'Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach' ],
@@ -104,6 +136,8 @@ class DbLoad
     ].each do |recording|
       add_recording recording[0], recording[1], recording[2], recording[3]
     end
+
+    # table: pieces_recordings
 
   end # run
 
