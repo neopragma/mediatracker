@@ -71,6 +71,20 @@ class DbInit
       primary_key [ :group_id, :group_type_id ]
     end
 
+    db.create_table! :group_type_synonyms do
+      foreign_key :base_group_type_id, :group_types,
+                { :deferrable => true,
+                  :on_delete => :cascade,
+                  :on_update => :set_null
+                }
+      foreign_key :synonym_group_type_id, :group_types,
+                { :deferrable => true,
+                  :on_delete => :cascade,
+                  :on_update => :set_null
+                }
+      primary_key [ :base_group_type_id, :synonym_group_type_id ]
+    end
+
     db.create_table! :pieces_recordings do
       foreign_key :piece_id, :pieces,
                   { :deferrable => true,

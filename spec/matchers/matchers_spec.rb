@@ -90,3 +90,14 @@ RSpec::Matchers.define :include_recordings do |expected|
     end
   end
 end
+
+RSpec::Matchers.define :equate_base_group_type_with_synonym_group_type do |expected|
+  match do |actual|
+    expected[0][:id] == actual.first[:base_group_type_id] &&
+    expected[1][:id] == actual.first[:synonym_group_type_id]
+  end
+
+  failure_message do |actual|
+    "base group type #{expected[0]} is not associated with synonym group type #{expected[1]}"
+  end
+end

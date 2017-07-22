@@ -24,6 +24,7 @@ class DbLoad
       'Brass Quintet',
       'Concert Band',
       'Jazz Combo',
+      'Jazz Orchestra',
       'Metal Band',
       'Orchestra',
       'Pop Band',
@@ -31,9 +32,25 @@ class DbLoad
       'SATB Chorus',
       'String Orchestra',
       'String Quartet',
+      'Symphonic Band',
+      'Wind Ensemble',
+      'Wind Orchestra',
       'Woodwind Ensemble',
       'Woodwind Quintet'
-    ]
+    ].each do |group_type_name|
+      add_group_type group_type_name
+    end
+
+    # table: group_type_synonyms
+    [
+      [ 'Big Band', 'Jazz Orchestra' ],
+      [ 'Concert Band', 'Wind Ensemble' ],
+      [ 'Concert Band', 'Symphonic Band' ],
+      [ 'Concert Band', 'Wind Orchestra' ],
+      [ 'Concert Band', 'Military Band' ],
+    ].each do |type_1, type_2|
+      add_group_type_synonym type_1, type_2
+    end
 
     # table: groups_group_types
     #TODO load the groups_group_types table

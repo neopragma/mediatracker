@@ -230,6 +230,40 @@ module DbHelpers
     db[:groups_group_types].where(:group_id => group[:id], :group_type_id => group_type[:id])
   end
 
+  # associate group type with synonym
+  def associate_group_type_and_synonym group_type_name, group_type_synonym
+    base_group_type = group_type group_type_name
+    raise RuntimeError, "Base group type \"#{group_type_name}\" not found in table: group_types" unless base_group_type
+
+    synonym_group_type = group_type group_type_synonym
+    raise RuntimeError, "Synonym group type \"#{group_type_synonym}\" not found in table: group_types" unless synonym_group_type
+
+    db.transaction do
+      db[:group_type_synonyms].insert({
+        :base_group_type_id => base_group_type[:id],
+        :synonym_group_type_id => synonym_group_type[:id]
+      })
+    end
+    db[:group_type_synonyms].where(:base_group_type_id => base_group_type[:id], :synonym_group_type_id => synonym_group_type[:id])
+  end
+
+  # lookup the base group type for a given synonym
+  def find_base_group_type_for_synonym synonym_group_type_name
+    synonym_id = db[:group_types]
+      .select(:id)
+      .where(:group_type_name => synonym_group_type_name)
+      .first
+
+    group_type_synonym = db[:group_type_synonyms]
+      .select(:base_group_type_id)
+      .where(:synonym_group_type_id => synonym_id[:id])
+      .first
+
+    db[:group_types]
+      .where(:id => group_type_synonym[:base_group_type_id])
+      .first
+  end
+
   # associate a recording with a collection
   def associate_collection_and_recording values_hash
     collection = collection(values_hash[:title])
