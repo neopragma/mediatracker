@@ -42,23 +42,23 @@ context 'sequel gem:' do
           { :group_name => 'Philip Jones Brass Ensemble' }
         ])
     end
-=begin
-    it 'raises runtime error when the collection is not in the collections table' do
-      expect{ $dbtest.associate_collection_and_recording(
-        { :title => 'No such collection',
-          :filename => 'PJBE - Brass Splendour'
+
+    it 'raises runtime error when the group is not in the groups table' do
+      expect{ $dbtest.associate_group_and_group_type(
+        { :group_name => 'No such group',
+          :group_type_name => 'PJBE - Brass Splendour'
         })
-      }.to raise_error 'No such collection was not found in table: collections'
+      }.to raise_error 'No such group not found in table: groups'
     end
 
-    it 'raises runtime error when the recording is not in the recordings table' do
-      expect{ $dbtest.associate_collection_and_recording(
-        { :title => 'PJBE - Brass Splendour',
-          :filename => 'no such filename'
+    it 'raises runtime error when the group type is not in the group_types table' do
+      expect{ $dbtest.associate_group_and_group_type(
+        { :group_name => 'Philip Jones Brass Ensemble',
+          :group_type_name => 'no such group_type'
         })
-      }.to raise_error 'no such filename was not found in table: recordings'
+      }.to raise_error 'no such group_type not found in table: group_types'
     end
-=end
+
   end # describe groups_group_types table
 
 end # context sequel gem

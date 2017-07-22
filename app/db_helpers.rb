@@ -216,10 +216,10 @@ module DbHelpers
   # associate a group with a group type
   def associate_group_and_group_type values_hash
     group = group(values_hash[:group_name])
-    raise RuntimeError, "#{values_hash[:group_name]} was not found in table: groups" unless group
+    raise RuntimeError, "#{values_hash[:group_name]} not found in table: groups" unless group
 
     group_type = group_type(values_hash[:group_type_name])
-    raise RuntimeError, "#{values_hash[:group_type_name]} was not found in table: group_types" unless group_type
+    raise RuntimeError, "#{values_hash[:group_type_name]} not found in table: group_types" unless group_type
 
     db.transaction do
       db[:groups_group_types].insert({
