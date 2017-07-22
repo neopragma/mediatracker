@@ -149,6 +149,20 @@ class DbInit
                   }
       primary_key [ :collection_id, :recording_id ]
     end
+
+    db.create_table! :group_types_recordings do
+      foreign_key :group_type_id, :group_types,
+                { :deferrable => true,
+                  :on_delete => :cascade,
+                  :on_update => :set_null
+                }
+      foreign_key :recording_id, :recordings,
+                { :deferrable => true,
+                  :on_delete => :cascade,
+                  :on_update => :set_null
+                }
+      primary_key [ :group_type_id, :recording_id ]
+    end
   end
 
 end

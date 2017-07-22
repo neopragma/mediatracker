@@ -264,6 +264,23 @@ module DbHelpers
     db[:pieces_recordings].where(:piece_id => piece[:id], :recording_id => recording[:id])
   end
 
+  # associate a group type with a recording
+  def associate_group_type_and_recording values_hash
+    group_type = group_type(values_hash[:group_type_name])
+    raise RuntimeError, "#{values_hash[:group_type_name]} not found in table: group_types" unless group_type
+
+    recording = recording(values_hash[:filename])
+    raise RuntimeError, "#{values_hash[:filename]} not found in table: recordings" unless recording
+
+    db.transaction do
+      db[:group_types_recordings].insert({
+        :group_type_id => group_type[:id],
+        :recording_id => recording[:id]
+      })
+    end
+    db[:group_types_recordings].where(:group_type_id => group_type[:id], :recording_id => recording[:id])
+  end
+
   # associate a collection with a label
   def associate_collection_and_label values_hash
     collection = collection(values_hash[:title])
