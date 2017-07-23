@@ -1,7 +1,9 @@
 require 'sequel'
 require 'logger'
+require_relative "./db_connect"
 
 module DbHelpers
+  include DbConnect
 
   # pass through to get a dataset
   def dataset name
@@ -383,7 +385,7 @@ module DbHelpers
   end
 
   def composed_by values_hash
-    #TODO needs refactoring
+    #TODO needs refactoring - or may be unnecessary
     person_id = person_by_full_name(values_hash[:surname], values_hash[:given_name])[:id]
     role_id = db[:roles].where(:role_name => 'Composer').first[:id]
     associated_pieces = db[:people_roles_pieces].where(:person_id => person_id, :role_id => role_id).all
@@ -394,18 +396,6 @@ module DbHelpers
 
   def insert_into dataset, key_values
     dataset.insert(key_values)
-  end
-
-  # connect to DATABASE_URL using default logger
-  def connect
-    @db = Sequel.connect(
-      ENV['DATABASE_URL'],
-      :loggers => [Logger.new(ENV['SEQUEL_LOG'])])
-  end
-
-  def db
-    @db = connect unless @db
-    @db
   end
 
 end
