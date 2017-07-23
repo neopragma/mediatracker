@@ -1,0 +1,8 @@
+development:
+  base_url: http://localhost:9292
+test:
+  base_url: http://localhost:9292
+staging:
+  base_url: http://localhost:9292
+production:
+  base_url: http://mediatracker.herokuapp.com
