@@ -1,0 +1,23 @@
+notifications:
+  email:
+    recipients:
+    - davenicolette@gmail.com
+    on_success: change
+    on_failure: change
+language: ruby
+rvm:
+- 2.3.1
+branches:
+  only: master
+install:
+- bundle install
+script:
+- bundle exec rake
+- rackup &
+- bundle exec rake cukes
+- kill `cat rpn_service.pid`
+#deploy:
+#  provider: heroku
+#  app: mediatracker
+#  api_key:
+#    secure: AC/iZDWtKhVFMCJ/GFZVq3wO4CXAstzHxHs/VtpK7KodPbFCfMcmuuUHf1AdQhKbiUMXoX6hO9oBMGXADEk3QAZUDpF35kOK9w83Nlh5dZFTFMMcwvMjGDBt+ycFfjwB7tDUTcLioxc7ZfcN5+IkeA2xRJ1HNJEVJPhh64hQ+bouosW+TjEVk8H2xtBdyG3Mk2WcmdxP81qYuSk5Esdtg7cD7jIbhzmF6pGCUO3ZMq/DAC+h0ZQ77ieovZm3UVsov8j5QZtoFEqZFzcrg0Ly3ia/Z0JMChF1Gx3tXIQ9roSYpEyhIVriDJiFsEaEAJNm/oEO24qvPZYZTEVSaS+g3Amannbbp6wBQoteXg6kGsO1gjlWlQ/wT23Xs9puhYBzU152v7Y3rI47CVz3rYfURbezrhart+XV1R5OCgx06611ahFE5X6006WnmDSZ89d12K6KbKVGgP863js14e+PWlRIaBM365WSsnms6cehpyfLIu7r8AZxHGZUsQ+gMvCFV/nzs7I7KLwdug9DFZL2iY9rITo9ZKpy/MCrETSB3VdP+/68YKAGwP3/RHjHIxDAFmnH2w0w/VkCMvQPgnFT0imC0CnSvMjTjoqyJ8TXIw3y0tpW3hc7W+CyqPovZceiEp0+0LfHillQm8VQCse1qCjbxOsC44mw62UvfS9GT+Q=
