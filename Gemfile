@@ -2,8 +2,6 @@ source 'https://rubygems.org'
 
 gem 'rack'
 gem 'sinatra'
-gem 'sinatra-contrib'  # <= for sinatra/config
-gem 'activesupport'
 gem 'json'
 gem 'sequel'
 gem 'sqlite3'
