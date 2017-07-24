@@ -30,8 +30,8 @@ task :clean do
 end
 
 task :reset_db do
-  sh "mkdir -p #{ENV['PROJECT_ROOT']}/db"
-  touch "#{ENV['PROJECT_ROOT']}/db/#{ENV['DATABASE_NAME']}"
+#  sh "mkdir -p #{ENV['PROJECT_ROOT']}/db"
+#  touch "#{ENV['PROJECT_ROOT']}/db/#{ENV['DATABASE_NAME']}"
 
   ruby "#{ENV['PROJECT_ROOT']}/util/db_init.rb"
 end
