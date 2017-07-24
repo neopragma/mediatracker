@@ -9,6 +9,7 @@ gem 'sequel'
 gem 'sqlite3'
 
 group :test do
+  gem 'smarter_csv'
   gem 'rake'
   gem 'rspec'
   gem 'rack-test'
