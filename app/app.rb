@@ -3,7 +3,7 @@ require 'json'
 require 'yaml'
 require_relative "./search"
 
-$config = YAML.load_file("./config/config.yml")
+$config = YAML.load_file("config/config.yml")
 
 get '/recordings/by/composer/:surname/:given_name' do
   return_as_json(

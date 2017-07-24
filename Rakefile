@@ -30,14 +30,11 @@ task :clean do
 end
 
 task :reset_db do
-#  sh "mkdir -p #{ENV['PROJECT_ROOT']}/db"
-#  touch "#{ENV['PROJECT_ROOT']}/db/#{ENV['DATABASE_NAME']}"
-
-  ruby "#{ENV['PROJECT_ROOT']}/util/db_init.rb"
+ruby 'util/db_init.rb'
 end
 
 task :load_db do
-  ruby "#{ENV['PROJECT_ROOT']}/util/db_load.rb"
+  ruby 'util/db_load.rb'
 end
 
 task :default => :clean_and_run_specs
