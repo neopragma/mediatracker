@@ -12,6 +12,7 @@ branches:
 install:
 - bundle install
 script:
+- source .envvars
 - bundle exec rake
 - rackup &
 - bundle exec rake cukes
