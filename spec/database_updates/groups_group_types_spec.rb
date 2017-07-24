@@ -1,10 +1,5 @@
-require_relative "../../app/db_helpers"
-
-# Expresses behaviors of the groups_group_types association.
-
-class Db
-  include DbHelpers
-end
+require_relative "../db"
+require_relative "../matchers/matchers_spec"
 
 context 'sequel gem:' do
 

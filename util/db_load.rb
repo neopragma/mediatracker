@@ -1,11 +1,16 @@
 require 'sequel'
 require 'logger'
+require 'yaml'
+require_relative "../app/db_connect"
 require_relative "../app/db_helpers"
 
+
 class DbLoad
-  include DbHelpers
+  include DbConnect, DbHelpers
 
   def run
+    $config = YAML.load_file("./config/config.yml")
+    connect
 
     # table: groups
     [
@@ -26,6 +31,7 @@ class DbLoad
       'Jazz Combo',
       'Jazz Orchestra',
       'Metal Band',
+      'Military Band',
       'Orchestra',
       'Pop Band',
       'Rock Band',
@@ -48,8 +54,8 @@ class DbLoad
       [ 'Concert Band', 'Symphonic Band' ],
       [ 'Concert Band', 'Wind Orchestra' ],
       [ 'Concert Band', 'Military Band' ],
-    ].each do |type_1, type_2|
-      add_group_type_synonym type_1, type_2
+    ].each do |base, synonym|
+      associate_group_type_and_synonym base, synonym
     end
 
     # table: groups_group_types
@@ -108,6 +114,7 @@ class DbLoad
       [ 'Humoresque', 'Op. 101, No. 7' ],
       [ 'Sleeping Beauty', 'Waltz' ],
       [ 'Fanfare for the Common Man', '' ],
+      [ 'Pictures at an Exhibition', 'Baba Yaga' ],
       [ 'Pictures at an Exhibition', 'Great Gate of Kiev' ]
     ].each do |piece|
       add_piece piece[0], piece[1]
@@ -120,10 +127,13 @@ class DbLoad
       [ 'Bach', 'Johann Sebastian', 'Composer', 'Christmas Oratorio', 'Ach, mein herzliches Jesulein' ],
       [ 'Byrd', 'William', 'Composer', 'The Battell', 'The Marche to the Fighte'],
       [ 'Byrd', 'William', 'Composer', 'The Battell', 'The Retraite' ],
+      [ 'Clarke', 'Jeremiah', 'Composer', 'Trumpet Voluntary', ''],
       [ 'Copland', 'Aaron', 'Composer', 'Fanfare for the Common Man', '' ],
       [ 'Dvorak', 'Antonin', 'Composer', 'Humoresque', 'Op. 101, No. 7' ],
       [ 'Gabrieli', 'Giovanni', 'Composer', 'Sonata pian\'e forte', '' ],
       [ 'Handel', 'Georg Fridric', 'Composer', 'Music for the Royal Fireworks', '' ],
+      [ 'Mussorgsky', 'Modest', 'Composer', 'Pictures at an Exhibition', 'Baba Yaga' ],
+      [ 'Mussorgsky', 'Modest', 'Composer', 'Pictures at an Exhibition', 'Great Gate of Kiev' ],
       [ 'Purcell', 'Henry', 'Composer', 'Trumpet Tune and Air' ],
       [ 'Scheidt', 'Samuel', 'Composer', 'Galliard Battaglia', '' ],
       [ 'Strauss', 'Richard', 'Composer', 'Festmusik der Stadt Wien', 'Fanfare' ],
@@ -155,6 +165,30 @@ class DbLoad
     end
 
     # table: pieces_recordings
+    [
+      [ 'Music for the Royal Fireworks', '', 'PJBE - Brass Splendour/Track 1.wav', 537, '1984-01-01' ],
+      [ 'Christmas Oratorio', 'Nun seid Ihr wohl gerochen', 'PJBE - Brass Splendour/Track 2.wav' ],
+      [ 'Christmas Oratorio', 'Ach, mein herzliches Jesulein', 'PJBE - Brass Splendour/Track 3.wav' ],
+      [ 'Sonata pian\'e forte', '', 'PJBE - Brass Splendour/Track 4.wav' ],
+      [ 'Trumpet Voluntary', '', 'PJBE - Brass Splendour/Track 5.wav' ],
+      [ 'The Battell', 'The Marche to the Fighte', 'PJBE - Brass Splendour/Track 6.wav' ],
+      [ 'The Battell', 'The Retraite', 'PJBE - Brass Splendour/Track 6.wav' ],
+      [ 'Trumpet Tune and Air', '', 'PJBE - Brass Splendour/Track 7.wav' ],
+      [ 'Galliard Battaglia', '', 'PJBE - Brass Splendour/Track 8.wav' ],
+      [ 'March', '(C.P.E. Bach)', 'PJBE - Brass Splendour/Track 9.wav' ],
+      [ 'Festmusik der Stadt Wien', 'Fanfare', 'PJBE - Brass Splendour/Track 10.wav' ],
+      [ 'Humoresque', 'Op. 101, No. 7', 'PJBE - Brass Splendour/Track 11.wav' ],
+      [ 'Sleeping Beauty', 'Waltz', 'PJBE - Brass Splendour/Track 12.wav' ],
+      [ 'Fanfare for the Common Man', '', 'PJBE - Brass Splendour/Track 13.wav' ],
+      [ 'Pictures at an Exhibition', 'Baba Yaga', 'PJBE - Brass Splendour/Track 14.wav' ],
+      [ 'Pictures at an Exhibition', 'Great Gate of Kiev', 'PJBE - Brass Splendour/Track 14.wav' ],
+    ].each do|title, subtitle, filename|
+      associate_piece_and_recording(
+        { :title => title,
+          :subtitle => subtitle,
+          :filename => filename
+        })
+    end
 
   end # run
 

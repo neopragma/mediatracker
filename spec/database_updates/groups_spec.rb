@@ -1,8 +1,5 @@
-require_relative "../../app/db_helpers"
-
-class Db
-  include DbHelpers
-end
+require_relative "../db"
+require_relative "../matchers/matchers_spec"
 
 context 'sequel gem:' do
 
@@ -21,7 +18,7 @@ context 'sequel gem:' do
     end
 
     it 'inserts one row into the groups table' do
-      @dbtest.add_group 'Philip Jones Brass Ensemble' 
+      @dbtest.add_group 'Philip Jones Brass Ensemble'
       expect(@dbtest.groups.count).to eq 1
     end
 

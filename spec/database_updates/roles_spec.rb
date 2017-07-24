@@ -1,8 +1,4 @@
-require_relative "../../app/db_helpers"
-
-class Db
-  include DbHelpers
-end
+require_relative "../db"
 
 context 'sequel gem:' do
 

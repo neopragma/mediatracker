@@ -7,17 +7,21 @@ module DbHelpers
 
   # pass through to get a dataset
   def dataset name
-    db[name.to_sym]
+    @db[name.to_sym]
+  end
+
+  def transaction &block
+    @db.transaction &block
   end
 
   # drops a table if it exists
   def drop_table table_name
-    db.drop_table table_name if db.table_exists? table_name
+    @db.drop_table table_name if @db.table_exists? table_name
   end
 
   # deletes all rows in the specified table
   def clear_table table_name
-    db[table_name].delete
+    @db[table_name].delete
   end
 
   # return the row for the specified collection title
@@ -27,13 +31,13 @@ module DbHelpers
 
   # return a sequel dataset containing all rows from the collections table
   def collections
-    db[:collections].order(:title)
+    @db[:collections].order(:title)
   end
 
   # insert one row into the collections table
   def add_collection title, year_released, remarks
-    db.transaction do
-      insert_into(db[:collections],
+    @db.transaction do
+      insert_into(@db[:collections],
         { :title => title,
           :year_released => year_released,
           :remarks => remarks
@@ -44,8 +48,8 @@ module DbHelpers
   # insert one row into the groups table
   # group_name is expected to be a string
   def add_group group_name
-    db.transaction do
-      insert_into(db[:groups], {:group_name => group_name})
+    @db.transaction do
+      insert_into(@db[:groups], {:group_name => group_name})
     end
   end
 
@@ -59,19 +63,19 @@ module DbHelpers
 
   # return the row for the specified group name
   def group group_name
-    db[:groups].where(:group_name => group_name).first
+    @db[:groups].where(:group_name => group_name).first
   end
 
   # return a sequel dataset containing all rows from the groups table, sorted
   def groups
-    db[:groups].order(:group_name)
+    @db[:groups].order(:group_name)
   end
 
   # insert one row into the group_types table
   # group_type_name is expected to be a string
   def add_group_type group_type_name
-    db.transaction do
-      insert_into(db[:group_types], {:group_type_name => group_type_name})
+    @db.transaction do
+      insert_into(@db[:group_types], {:group_type_name => group_type_name})
     end
   end
 
@@ -85,19 +89,19 @@ module DbHelpers
 
   # return the row for the specified group name
   def group_type group_type_name
-    db[:group_types].where(:group_type_name => group_type_name).first
+    @db[:group_types].where(:group_type_name => group_type_name).first
   end
 
   # return a sequel dataset containing all rows from the group_types table, sorted
   def group_types
-    db[:group_types].order(:group_type_name)
+    @db[:group_types].order(:group_type_name)
   end
 
   # insert one row into the labels table
   # label_name is expected to be a string
   def add_label label_name
-    db.transaction do
-      insert_into(db[:labels], {:label_name => label_name})
+    @db.transaction do
+      insert_into(@db[:labels], {:label_name => label_name})
     end
   end
 
@@ -111,18 +115,18 @@ module DbHelpers
 
   # return the row for the specified label name
   def label label_name
-    db[:labels].where(:label_name => label_name).first
+    @db[:labels].where(:label_name => label_name).first
   end
 
   # return a sequel dataset containing all rows from the labels table, sorted
   def labels
-    db[:labels].order(:label_name)
+    @db[:labels].order(:label_name)
   end
 
   # insert one row into the people table
   def add_person surname, given_name, nickname
-    db.transaction do
-      insert_into(db[:people],
+    @db.transaction do
+      insert_into(@db[:people],
         { :surname => surname,
           :given_name => given_name,
           :nickname => nickname
@@ -131,7 +135,7 @@ module DbHelpers
   end
 
   def people
-    db[:people].order(:surname, :given_name)
+    @db[:people].order(:surname, :given_name)
   end
 
   # return the row for the specified role name
@@ -147,14 +151,14 @@ module DbHelpers
   # insert one row into the pieces table
   # title and subtitle arguments are strings
   def add_piece title, subtitle
-    db.transaction do
-      insert_into(db[:pieces], {:title => title, :subtitle => subtitle})
+    @db.transaction do
+      insert_into(@db[:pieces], {:title => title, :subtitle => subtitle})
     end
   end
 
   # retrieve all rows from pieces sorted ascending by title, subtitle
   def pieces
-    db[:pieces].order(:title, :subtitle)
+    @db[:pieces].order(:title, :subtitle)
   end
 
   # retrieve all rows from pieces table that match on title alone or both
@@ -168,8 +172,8 @@ module DbHelpers
   # insert one row into the recordings table
   # recording_date should be a string that looks like YYYY-MM-YY
   def add_recording filename, duration_in_seconds, recording_date, description
-    db.transaction do
-      insert_into(db[:recordings],
+    @db.transaction do
+      insert_into(@db[:recordings],
         {
           :filename => filename,
           :duration_in_seconds => duration_in_seconds,
@@ -186,14 +190,14 @@ module DbHelpers
 
   # return a sequel dataset containing all rows from the recordings table
   def recordings
-    db[:recordings].order(:filename)
+    @db[:recordings].order(:filename)
   end
 
   # insert one row into the roles table
   # role_name is expected to be a string
   def add_role role_name
-    db.transaction do
-      insert_into(db[:roles], {:role_name => role_name})
+    @db.transaction do
+      insert_into(@db[:roles], {:role_name => role_name})
     end
   end
 
@@ -212,7 +216,7 @@ module DbHelpers
 
   # return a sequel dataset containing all rows from the roles table
   def roles
-    db[:roles].order(:role_name)
+    @db[:roles].order(:role_name)
   end
 
   # associate a group with a group type
@@ -223,13 +227,13 @@ module DbHelpers
     group_type = group_type(values_hash[:group_type_name])
     raise RuntimeError, "#{values_hash[:group_type_name]} not found in table: group_types" unless group_type
 
-    db.transaction do
-      db[:groups_group_types].insert({
+    @db.transaction do
+      @db[:groups_group_types].insert({
         :group_id => group[:id],
         :group_type_id => group_type[:id]
       })
     end
-    db[:groups_group_types].where(:group_id => group[:id], :group_type_id => group_type[:id])
+    @db[:groups_group_types].where(:group_id => group[:id], :group_type_id => group_type[:id])
   end
 
   # associate group type with synonym
@@ -240,28 +244,28 @@ module DbHelpers
     synonym_group_type = group_type group_type_synonym
     raise RuntimeError, "Synonym group type \"#{group_type_synonym}\" not found in table: group_types" unless synonym_group_type
 
-    db.transaction do
-      db[:group_type_synonyms].insert({
+    @db.transaction do
+      @db[:group_type_synonyms].insert({
         :base_group_type_id => base_group_type[:id],
         :synonym_group_type_id => synonym_group_type[:id]
       })
     end
-    db[:group_type_synonyms].where(:base_group_type_id => base_group_type[:id], :synonym_group_type_id => synonym_group_type[:id])
+    @db[:group_type_synonyms].where(:base_group_type_id => base_group_type[:id], :synonym_group_type_id => synonym_group_type[:id])
   end
 
   # lookup the base group type for a given synonym
   def find_base_group_type_for_synonym synonym_group_type_name
-    synonym_id = db[:group_types]
+    synonym_id = @db[:group_types]
       .select(:id)
       .where(:group_type_name => synonym_group_type_name)
       .first
 
-    group_type_synonym = db[:group_type_synonyms]
+    group_type_synonym = @db[:group_type_synonyms]
       .select(:base_group_type_id)
       .where(:synonym_group_type_id => synonym_id[:id])
       .first
 
-    db[:group_types]
+    @db[:group_types]
       .where(:id => group_type_synonym[:base_group_type_id])
       .first
   end
@@ -274,13 +278,13 @@ module DbHelpers
     recording = recording(values_hash[:filename])
     raise RuntimeError, "#{values_hash[:filename]} was not found in table: recordings" unless recording
 
-    db.transaction do
-      db[:collections_recordings].insert({
+    @db.transaction do
+      @db[:collections_recordings].insert({
         :collection_id => collection[:id],
         :recording_id => recording[:id]
       })
     end
-    db[:collections_recordings].where(:collection_id => collection[:id], :recording_id => recording[:id])
+    @db[:collections_recordings].where(:collection_id => collection[:id], :recording_id => recording[:id])
   end
 
   # associate a piece with a recording
@@ -291,13 +295,13 @@ module DbHelpers
     recording = recording(values_hash[:filename])
     raise RuntimeError, "#{values_hash[:filename]} not found in table: recordings" unless recording
 
-    db.transaction do
-      db[:pieces_recordings].insert({
+    @db.transaction do
+      @db[:pieces_recordings].insert({
         :piece_id => piece[:id],
         :recording_id => recording[:id]
       })
     end
-    db[:pieces_recordings].where(:piece_id => piece[:id], :recording_id => recording[:id])
+    @db[:pieces_recordings].where(:piece_id => piece[:id], :recording_id => recording[:id])
   end
 
   # associate a group type with a recording
@@ -308,13 +312,13 @@ module DbHelpers
     recording = recording(values_hash[:filename])
     raise RuntimeError, "#{values_hash[:filename]} not found in table: recordings" unless recording
 
-    db.transaction do
-      db[:group_types_recordings].insert({
+    @db.transaction do
+      @db[:group_types_recordings].insert({
         :group_type_id => group_type[:id],
         :recording_id => recording[:id]
       })
     end
-    db[:group_types_recordings].where(:group_type_id => group_type[:id], :recording_id => recording[:id])
+    @db[:group_types_recordings].where(:group_type_id => group_type[:id], :recording_id => recording[:id])
   end
 
   # associate a collection with a label
@@ -325,13 +329,13 @@ module DbHelpers
     label = label(values_hash[:label_name])
     raise RuntimeError, "#{values_hash[:label_name]} not found in table: labels" unless label
 
-    db.transaction do
-      db[:collections_labels].insert({
+    @db.transaction do
+      @db[:collections_labels].insert({
         :collection_id => collection[:id],
         :label_id => label[:id]
       })
     end
-    db[:collections_labels].where(:collection_id => collection[:id], :label_id => label[:id])
+    @db[:collections_labels].where(:collection_id => collection[:id], :label_id => label[:id])
   end
 
   # associate a person, role, and piece
@@ -345,14 +349,14 @@ module DbHelpers
     piece = pieces_by_title(values_hash[:title], values_hash[:subtitle]).first
     raise RuntimeError, "No piece was found in table pieces with title \'#{values_hash[:title]}\' and subtitle \'#{values_hash[:subtitle]}\'" unless piece
 
-    db.transaction do
-      db[:people_roles_pieces].insert({
+    @db.transaction do
+      @db[:people_roles_pieces].insert({
         :person_id => person[:id],
         :role_id => role[:id],
         :piece_id => piece[:id]
       })
     end
-    db[:people_roles_pieces].where(:person_id => person[:id], :role_id => role[:id], :piece_id => piece[:id])
+    @db[:people_roles_pieces].where(:person_id => person[:id], :role_id => role[:id], :piece_id => piece[:id])
   end
 
   # associate a person, role, and recording
@@ -366,30 +370,30 @@ module DbHelpers
     recording = recording(values_hash[:filename])
     raise RuntimeError, "No recording was found in table recordings with filename \'#{values_hash[:filename]}\'" unless recording
 
-    db.transaction do
-      db[:people_roles_recordings].insert({
+    @db.transaction do
+      @db[:people_roles_recordings].insert({
         :person_id => person[:id],
         :role_id => role[:id],
         :recording_id => recording[:id]
       })
     end
-    db[:people_roles_recordings].where(:person_id => person[:id], :role_id => role[:id], :recording_id => recording[:id])
+    @db[:people_roles_recordings].where(:person_id => person[:id], :role_id => role[:id], :recording_id => recording[:id])
   end
 
   def composers_of values_hash
     #TODO needs refactoring
     piece_id = pieces_by_title(values_hash[:title], values_hash[:subtitle]).first[:id]
-    role_id = db[:roles].where(:role_name => 'Composer').first[:id]
-    composers = db[:people_roles_pieces].where(:piece_id => piece_id, :role_id => role_id).all
-    db[:people].where(:id => composers.first[:person_id]).all
+    role_id = @db[:roles].where(:role_name => 'Composer').first[:id]
+    composers = @db[:people_roles_pieces].where(:piece_id => piece_id, :role_id => role_id).all
+    @db[:people].where(:id => composers.first[:person_id]).all
   end
 
   def composed_by values_hash
     #TODO needs refactoring - or may be unnecessary
     person_id = person_by_full_name(values_hash[:surname], values_hash[:given_name])[:id]
-    role_id = db[:roles].where(:role_name => 'Composer').first[:id]
-    associated_pieces = db[:people_roles_pieces].where(:person_id => person_id, :role_id => role_id).all
-    db[:pieces].where(:id => associated_pieces.first[:piece_id]).all
+    role_id = @db[:roles].where(:role_name => 'Composer').first[:id]
+    associated_pieces = @db[:people_roles_pieces].where(:person_id => person_id, :role_id => role_id).all
+    @db[:pieces].where(:id => associated_pieces.first[:piece_id]).all
   end
 
 #  private

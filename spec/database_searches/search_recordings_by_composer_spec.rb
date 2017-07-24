@@ -1,9 +1,6 @@
-require_relative "../../app/search.rb"
-require_relative "../../app/db_helpers.rb"
-
-class Db
-  include DbHelpers
-end
+require_relative "../db"
+require_relative "../matchers/matchers_spec"
+require_relative "../../app/search"
 
 context 'search for recordings:' do
   before do
@@ -26,8 +23,8 @@ context 'search for recordings:' do
 
     it 'raises runtime error when the role "Composer" is not in the roles table' do
       set_up_bach_recordings
-      @db.db.transaction do
-        @db.db[:roles].where(:role_name => 'Composer').delete
+      @db.transaction do
+        @db.dataset(:roles).where(:role_name => 'Composer').delete
       end
 
       expect{ @search.find_recordings_by_composer({
@@ -39,8 +36,8 @@ context 'search for recordings:' do
 
     it 'raises runtime error when the name of the composer is not in the people table' do
       set_up_bach_recordings
-      @db.db.transaction do
-        @db.db[:people].where(:surname => 'Bach', :given_name => 'Johann Sebastian').delete
+      @db.transaction do
+        @db.dataset(:people).where(:surname => 'Bach', :given_name => 'Johann Sebastian').delete
       end
 
       expect{ @search.find_recordings_by_composer({
@@ -55,7 +52,7 @@ context 'search for recordings:' do
 private
 
   def set_up_bach_recordings
-    @db.db.transaction do
+    @db.transaction do
       @db.clear_table :people
       @db.add_person 'Bach', 'Johann Sebastian', ''
       @db.add_person 'Handel', 'Georg Fridrick', ''

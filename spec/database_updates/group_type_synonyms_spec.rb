@@ -1,10 +1,11 @@
-require_relative "../../app/db_helpers"
-
-class Db
-  include DbHelpers
-end
+require_relative "../db"
+require_relative "../matchers/matchers_spec"
 
 context 'sequel gem:' do
+
+  before do
+    $dbtest = Db.new
+  end
 
   describe 'group_type_synonyms table:' do
 
@@ -21,8 +22,8 @@ context 'sequel gem:' do
     it 'associates a synonym with a group_type' do
       expect($dbtest.associate_group_type_and_synonym 'Concert Band', 'Military Band')
         .to equate_base_group_type_with_synonym_group_type([
-          $dbtest.db[:group_types].select(:id).where(:group_type_name => 'Concert Band').first,
-          $dbtest.db[:group_types].select(:id).where(:group_type_name => 'Military Band').first
+          $dbtest.dataset(:group_types).select(:id).where(:group_type_name => 'Concert Band').first,
+          $dbtest.dataset(:group_types).select(:id).where(:group_type_name => 'Military Band').first
         ])
     end
 

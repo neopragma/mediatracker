@@ -1,36 +1,41 @@
 require 'sequel'
 require 'logger'
+require 'yaml'
+require_relative "../app/db_connect"
 require_relative "../app/db_helpers"
 
 class DbInit
-  include DbHelpers
+  include DbConnect, DbHelpers
 
   def run
+    $config = YAML.load_file("./config/config.yml")
+    connect
+
     drop_table :people_roles_pieces
 
-    db.create_table! :collections  do
+    @db.create_table! :collections  do
       primary_key :id
       String :title, :null=>false
       String :year_released
       String :remarks
     end
 
-    db.create_table! :groups do
+    @db.create_table! :groups do
       primary_key :id
       String :group_name, :null => false
     end
 
-    db.create_table! :group_types do
+    @db.create_table! :group_types do
       primary_key :id
       String :group_type_name, :null => false
     end
 
-    db.create_table! :labels  do
+    @db.create_table! :labels  do
       primary_key :id
       String :label_name, :null=>false
     end
 
-    db.create_table! :people  do
+    @db.create_table! :people  do
       primary_key :id
       String :surname, :null=>false
       String :given_name
@@ -38,13 +43,13 @@ class DbInit
 
     end
 
-    db.create_table! :pieces do
+    @db.create_table! :pieces do
       primary_key :id
       String :title, :null=>false
       String :subtitle
     end
 
-    db.create_table! :recordings  do
+    @db.create_table! :recordings  do
       primary_key :id
       String :filename, :null=>false
       String :description
@@ -52,12 +57,12 @@ class DbInit
       Integer :duration_in_seconds
     end
 
-    db.create_table! :roles  do
+    @db.create_table! :roles  do
       primary_key :id
       String :role_name, :null=>false
     end
 
-    db.create_table! :groups_group_types do
+    @db.create_table! :groups_group_types do
       foreign_key :group_id, :groups,
                 { :deferrable => true,
                   :on_delete => :cascade,
@@ -71,7 +76,7 @@ class DbInit
       primary_key [ :group_id, :group_type_id ]
     end
 
-    db.create_table! :group_type_synonyms do
+    @db.create_table! :group_type_synonyms do
       foreign_key :base_group_type_id, :group_types,
                 { :deferrable => true,
                   :on_delete => :cascade,
@@ -85,7 +90,7 @@ class DbInit
       primary_key [ :base_group_type_id, :synonym_group_type_id ]
     end
 
-    db.create_table! :pieces_recordings do
+    @db.create_table! :pieces_recordings do
       foreign_key :piece_id, :pieces,
                   { :deferrable => true,
                     :on_delete => :cascade,
@@ -99,7 +104,7 @@ class DbInit
       primary_key [ :piece_id, :recording_id ]
     end
 
-    db.create_table! :people_roles_pieces do
+    @db.create_table! :people_roles_pieces do
       foreign_key :piece_id, :pieces,
                   { :deferrable => true,
                     :on_delete => :cascade,
@@ -118,7 +123,7 @@ class DbInit
       primary_key [ :piece_id, :person_id, :role_id ]
     end
 
-    db.create_table! :people_roles_recordings do
+    @db.create_table! :people_roles_recordings do
       foreign_key :recording_id, :recordings,
                   { :deferrable => true,
                     :on_delete => :cascade,
@@ -136,7 +141,7 @@ class DbInit
       primary_key [ :recording_id, :person_id, :role_id ]
     end
 
-    db.create_table! :collections_labels do
+    @db.create_table! :collections_labels do
       foreign_key :collection_id, :collections,
                 { :deferrable => true,
                   :on_delete => :cascade,
@@ -150,7 +155,7 @@ class DbInit
       primary_key [ :collection_id, :label_id ]
     end
 
-    db.create_table! :collections_recordings do
+    @db.create_table! :collections_recordings do
       foreign_key :collection_id, :collections,
                   { :deferrable => true,
                     :on_delete => :cascade,
@@ -164,7 +169,7 @@ class DbInit
       primary_key [ :collection_id, :recording_id ]
     end
 
-    db.create_table! :group_types_recordings do
+    @db.create_table! :group_types_recordings do
       foreign_key :group_type_id, :group_types,
                 { :deferrable => true,
                   :on_delete => :cascade,

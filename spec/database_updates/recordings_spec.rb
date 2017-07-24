@@ -1,10 +1,5 @@
-require_relative "../../app/db_helpers"
-
-# Expresses behaviors related to the recordings table
-
-class Db
-  include DbHelpers
-end
+require_relative "../db"
+require_relative "../matchers/matchers_spec"
 
 context 'sequel gem:' do
 
@@ -29,6 +24,11 @@ context 'sequel gem:' do
 
     it 'inserts the expected values into a single row in the recordings table' do
       @dbtest.add_recording 'PJBE - Brass Splendour/track1.wav', 537, '1984-01-01', 'Some great brass playing'
+
+result = @dbtest.recordings.where(:filename => 'PJBE - Brass Splendour/track1.wav').first
+puts "\n\nresult: #{result}"
+puts "\n\n"
+
       expect(@dbtest.recordings.where(:filename => 'PJBE - Brass Splendour/track1.wav').first)
         .to have_attributes({
           :filename => 'PJBE - Brass Splendour/track1.wav',

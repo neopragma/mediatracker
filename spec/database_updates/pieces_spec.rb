@@ -1,10 +1,5 @@
-require_relative "../../app/db_helpers"
-
-# Expresses behaviors related to the pieces table
-
-class Db
-  include DbHelpers
-end
+require_relative "../db"
+require_relative "../matchers/matchers_spec"
 
 context 'sequel gem:' do
 
