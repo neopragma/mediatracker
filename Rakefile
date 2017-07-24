@@ -30,6 +30,7 @@ task :clean do
 end
 
 task :reset_db do
+  touch "#{ENV['PROJECT_ROOT']}/db/mediatracker=#{ENV['RACK_ENV']}.sqlite3"
   ruby "#{ENV['PROJECT_ROOT']}/util/db_init.rb"
 end
 
