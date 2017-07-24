@@ -16,6 +16,7 @@ script:
 - bundle exec rake
 - bundle exec rackup &
 - bundle exec rake cukes
+- kill -INT "$!"
 #deploy:
 #  provider: heroku
 #  app: mediatracker
