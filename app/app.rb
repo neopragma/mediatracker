@@ -8,12 +8,14 @@ $config = YAML.load_file("./config/config.yml")
 get '/recordings/by/composer/:surname/:given_name' do
   content_type :json
   @search ||= Search.new
-  result = @search.find_recordings_by_composer({
-    :surname => CGI.unescape(params[:surname]),
-    :given_name => CGI.unescape(params[:given_name])})
+  return_as_json(
+    @search.find_recordings_by_composer({
+      :surname => CGI.unescape(params[:surname]),
+      :given_name => CGI.unescape(params[:given_name])})
+    )
+end
 
-  puts "result: #{result}"
-
+def return_as_json result
   {
     :request_url => "#{request.url}",
     :result => result
