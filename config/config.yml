@@ -1,12 +1,16 @@
 development:
   base_url: http://localhost:9292
   database_url: sqlite://db/mediatracker-development.sqlite3
+  logger: logs/sequel_log
 test:
   base_url: http://localhost:9292
   database_url: sqlite://db/mediatracker-test.sqlite3
+  logger: STDOUT
 staging:
   base_url: http://localhost:9292
   database_url: sqlite://db/mediatracker-staging.sqlite3
+  logger: logs/sequel.log
 production:
   base_url: http://mediatracker.herokuapp.com
   databas_url: sqlite://db/mediatracker-production.sqlite3
+  logger: STDOUT

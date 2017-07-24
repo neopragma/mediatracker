@@ -9,7 +9,7 @@ module DbConnect
     $config = YAML.load_file("./config/config.yml")
     @db ||= Sequel.connect(
       $config[ENV['RACK_ENV']]['database_url'],
-      :loggers => [Logger.new(ENV['SEQUEL_LOG'])])
+      :loggers => [ Logger.new($config[ENV['RACK_ENV']]['logger']) ])
   end
 
 end

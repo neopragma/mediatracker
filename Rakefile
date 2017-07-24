@@ -26,9 +26,11 @@ task :clean_and_run_specs do
 end
 
 task :clean do
-  rm ENV['SEQUEL_LOG'] if File.exist?(ENV['SEQUEL_LOG'])
+  $config = YAML.load_file("./config/config.yml")
+  logfile = $config[ENV['RACK_ENV']]['logger']
+  rm logfile if File.exist? logfile
   mkdir_p 'logs'
-  touch ENV['SEQUEL_LOG']
+  touch logfile
 end
 
 task :reset_db do

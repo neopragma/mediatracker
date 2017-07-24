@@ -1,0 +1,1440 @@
+# Logfile created on 2017-07-24 10:50:26 -0700 by logger.rb/v1.2.7
+I, [2017-07-24T10:50:26.638669 #25164]  INFO -- : (0.012815s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:26.638810 #25164]  INFO -- : (0.000036s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:26.639110 #25164]  INFO -- : (0.000141s) SELECT sqlite_version()
+I, [2017-07-24T10:50:26.639520 #25164]  INFO -- : (0.000117s) SELECT NULL AS 'nil' FROM `people_roles_pieces` LIMIT 1
+I, [2017-07-24T10:50:26.651231 #25164]  INFO -- : (0.011439s) DROP TABLE `people_roles_pieces`
+I, [2017-07-24T10:50:26.655119 #25164]  INFO -- : (0.003311s) DROP TABLE IF EXISTS `collections`
+I, [2017-07-24T10:50:26.657961 #25164]  INFO -- : (0.002404s) CREATE TABLE `collections` (`id` integer NOT NULL PRIMARY KEY AUTOINCREMENT, `title` varchar(255) NOT NULL, `year_released` varchar(255), `remarks` varchar(255))
+I, [2017-07-24T10:50:26.672169 #25164]  INFO -- : (0.014007s) DROP TABLE IF EXISTS `groups`
+I, [2017-07-24T10:50:26.674010 #25164]  INFO -- : (0.001471s) CREATE TABLE `groups` (`id` integer NOT NULL PRIMARY KEY AUTOINCREMENT, `group_name` varchar(255) NOT NULL)
+I, [2017-07-24T10:50:26.683389 #25164]  INFO -- : (0.009187s) DROP TABLE IF EXISTS `group_types`
+I, [2017-07-24T10:50:26.685151 #25164]  INFO -- : (0.001433s) CREATE TABLE `group_types` (`id` integer NOT NULL PRIMARY KEY AUTOINCREMENT, `group_type_name` varchar(255) NOT NULL)
+I, [2017-07-24T10:50:26.686587 #25164]  INFO -- : (0.001314s) DROP TABLE IF EXISTS `labels`
+I, [2017-07-24T10:50:26.687786 #25164]  INFO -- : (0.001039s) CREATE TABLE `labels` (`id` integer NOT NULL PRIMARY KEY AUTOINCREMENT, `label_name` varchar(255) NOT NULL)
+I, [2017-07-24T10:50:26.689002 #25164]  INFO -- : (0.001119s) DROP TABLE IF EXISTS `people`
+I, [2017-07-24T10:50:26.704117 #25164]  INFO -- : (0.014884s) CREATE TABLE `people` (`id` integer NOT NULL PRIMARY KEY AUTOINCREMENT, `surname` varchar(255) NOT NULL, `given_name` varchar(255), `nickname` varchar(255))
+I, [2017-07-24T10:50:26.707573 #25164]  INFO -- : (0.003252s) DROP TABLE IF EXISTS `pieces`
+I, [2017-07-24T10:50:26.711914 #25164]  INFO -- : (0.004014s) CREATE TABLE `pieces` (`id` integer NOT NULL PRIMARY KEY AUTOINCREMENT, `title` varchar(255) NOT NULL, `subtitle` varchar(255))
+I, [2017-07-24T10:50:26.725856 #25164]  INFO -- : (0.013727s) DROP TABLE IF EXISTS `recordings`
+I, [2017-07-24T10:50:26.729073 #25164]  INFO -- : (0.002788s) CREATE TABLE `recordings` (`id` integer NOT NULL PRIMARY KEY AUTOINCREMENT, `filename` varchar(255) NOT NULL, `description` varchar(255), `recording_date` date, `duration_in_seconds` integer)
+I, [2017-07-24T10:50:26.731651 #25164]  INFO -- : (0.002417s) DROP TABLE IF EXISTS `roles`
+I, [2017-07-24T10:50:26.734469 #25164]  INFO -- : (0.002591s) CREATE TABLE `roles` (`id` integer NOT NULL PRIMARY KEY AUTOINCREMENT, `role_name` varchar(255) NOT NULL)
+I, [2017-07-24T10:50:26.735750 #25164]  INFO -- : (0.001122s) DROP TABLE IF EXISTS `groups_group_types`
+I, [2017-07-24T10:50:26.740301 #25164]  INFO -- : (0.004244s) CREATE TABLE `groups_group_types` (`group_id` integer NOT NULL REFERENCES `groups` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, `group_type_id` integer NOT NULL REFERENCES `group_types` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, PRIMARY KEY (`group_id`, `group_type_id`))
+I, [2017-07-24T10:50:26.752535 #25164]  INFO -- : (0.012015s) DROP TABLE IF EXISTS `group_type_synonyms`
+I, [2017-07-24T10:50:26.763421 #25164]  INFO -- : (0.010389s) CREATE TABLE `group_type_synonyms` (`base_group_type_id` integer NOT NULL REFERENCES `group_types` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, `synonym_group_type_id` integer NOT NULL REFERENCES `group_types` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, PRIMARY KEY (`base_group_type_id`, `synonym_group_type_id`))
+I, [2017-07-24T10:50:26.772947 #25164]  INFO -- : (0.009315s) DROP TABLE IF EXISTS `pieces_recordings`
+I, [2017-07-24T10:50:26.776228 #25164]  INFO -- : (0.002853s) CREATE TABLE `pieces_recordings` (`piece_id` integer NOT NULL REFERENCES `pieces` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, `recording_id` integer NOT NULL REFERENCES `recordings` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, PRIMARY KEY (`piece_id`, `recording_id`))
+I, [2017-07-24T10:50:26.776422 #25164]  INFO -- : (0.000057s) DROP TABLE IF EXISTS `people_roles_pieces`
+I, [2017-07-24T10:50:26.779524 #25164]  INFO -- : (0.002837s) CREATE TABLE `people_roles_pieces` (`piece_id` integer NOT NULL REFERENCES `pieces` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, `person_id` integer NOT NULL REFERENCES `people` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, `role_id` integer NOT NULL REFERENCES `roles` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, PRIMARY KEY (`piece_id`, `person_id`, `role_id`))
+I, [2017-07-24T10:50:26.789732 #25164]  INFO -- : (0.010048s) DROP TABLE IF EXISTS `people_roles_recordings`
+I, [2017-07-24T10:50:26.798864 #25164]  INFO -- : (0.008711s) CREATE TABLE `people_roles_recordings` (`recording_id` integer NOT NULL REFERENCES `recordings` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, `person_id` integer NOT NULL REFERENCES `people` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, `role_id` integer NOT NULL REFERENCES `roles` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, PRIMARY KEY (`recording_id`, `person_id`, `role_id`))
+I, [2017-07-24T10:50:26.801938 #25164]  INFO -- : (0.002853s) DROP TABLE IF EXISTS `collections_labels`
+I, [2017-07-24T10:50:26.815661 #25164]  INFO -- : (0.013387s) CREATE TABLE `collections_labels` (`collection_id` integer NOT NULL REFERENCES `collections` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, `label_id` integer NOT NULL REFERENCES `labels` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, PRIMARY KEY (`collection_id`, `label_id`))
+I, [2017-07-24T10:50:26.818751 #25164]  INFO -- : (0.002885s) DROP TABLE IF EXISTS `collections_recordings`
+I, [2017-07-24T10:50:26.821821 #25164]  INFO -- : (0.002748s) CREATE TABLE `collections_recordings` (`collection_id` integer NOT NULL REFERENCES `collections` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, `recording_id` integer NOT NULL REFERENCES `recordings` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, PRIMARY KEY (`collection_id`, `recording_id`))
+I, [2017-07-24T10:50:26.823934 #25164]  INFO -- : (0.001940s) DROP TABLE IF EXISTS `group_types_recordings`
+I, [2017-07-24T10:50:26.832186 #25164]  INFO -- : (0.007943s) CREATE TABLE `group_types_recordings` (`group_type_id` integer NOT NULL REFERENCES `group_types` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, `recording_id` integer NOT NULL REFERENCES `recordings` ON DELETE CASCADE ON UPDATE SET NULL DEFERRABLE INITIALLY DEFERRED, PRIMARY KEY (`group_type_id`, `recording_id`))
+I, [2017-07-24T10:50:27.241358 #25167]  INFO -- : (0.000390s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.243517 #25167]  INFO -- : (0.000052s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.245617 #25167]  INFO -- : (0.000116s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.245767 #25167]  INFO -- : (0.000046s) BEGIN
+I, [2017-07-24T10:50:27.246152 #25167]  INFO -- : (0.000133s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.246545 #25167]  INFO -- : (0.000142s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:27.246793 #25167]  INFO -- : (0.000067s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Handel', 'Georg Fridrick', '')
+I, [2017-07-24T10:50:27.247029 #25167]  INFO -- : (0.000087s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.248798 #25167]  INFO -- : (0.000077s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:27.248976 #25167]  INFO -- : (0.000045s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:27.249221 #25167]  INFO -- : (0.000079s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.249425 #25167]  INFO -- : (0.000061s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:27.249568 #25167]  INFO -- : (0.000043s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:27.249713 #25167]  INFO -- : (0.000042s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Music for the Royal Fireworks', '')
+I, [2017-07-24T10:50:27.249915 #25167]  INFO -- : (0.000099s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.250120 #25167]  INFO -- : (0.000063s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 1.wav', 537, '1984-01-01', '')
+I, [2017-07-24T10:50:27.250257 #25167]  INFO -- : (0.000050s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:27.250418 #25167]  INFO -- : (0.000050s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 3.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:27.250751 #25167]  INFO -- : (0.000188s) SELECT * FROM `pieces` WHERE (`title` = 'Music for the Royal Fireworks') ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:27.253027 #25167]  INFO -- : (0.002156s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 1.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.255478 #25167]  INFO -- : (0.000094s) INSERT INTO `pieces_recordings` (`piece_id`, `recording_id`) VALUES (3, 1)
+I, [2017-07-24T10:50:27.255822 #25167]  INFO -- : (0.000114s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:27.256105 #25167]  INFO -- : (0.000123s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 2.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.256261 #25167]  INFO -- : (0.000045s) INSERT INTO `pieces_recordings` (`piece_id`, `recording_id`) VALUES (1, 2)
+I, [2017-07-24T10:50:27.256539 #25167]  INFO -- : (0.000083s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Ach, mein hertzliches Jesulein')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:27.256835 #25167]  INFO -- : (0.000165s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 3.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.257010 #25167]  INFO -- : (0.000055s) INSERT INTO `pieces_recordings` (`piece_id`, `recording_id`) VALUES (2, 3)
+I, [2017-07-24T10:50:27.257316 #25167]  INFO -- : (0.000111s) SELECT * FROM `people` WHERE ((`surname` = 'Handel') AND (`given_name` = 'Georg Fridrick')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:27.257547 #25167]  INFO -- : (0.000085s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:27.257801 #25167]  INFO -- : (0.000118s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 1.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.258033 #25167]  INFO -- : (0.000079s) INSERT INTO `people_roles_recordings` (`person_id`, `role_id`, `recording_id`) VALUES (2, 2, 1)
+I, [2017-07-24T10:50:27.258302 #25167]  INFO -- : (0.000083s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:27.258495 #25167]  INFO -- : (0.000079s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:27.266450 #25167]  INFO -- : (0.007815s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 2.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.270577 #25167]  INFO -- : (0.003575s) INSERT INTO `people_roles_recordings` (`person_id`, `role_id`, `recording_id`) VALUES (1, 2, 2)
+I, [2017-07-24T10:50:27.271340 #25167]  INFO -- : (0.000278s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:27.271732 #25167]  INFO -- : (0.000119s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:27.272562 #25167]  INFO -- : (0.000634s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 3.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.272838 #25167]  INFO -- : (0.000076s) INSERT INTO `people_roles_recordings` (`person_id`, `role_id`, `recording_id`) VALUES (1, 2, 3)
+I, [2017-07-24T10:50:27.284202 #25167]  INFO -- : (0.011199s) COMMIT
+I, [2017-07-24T10:50:27.285068 #25167]  INFO -- : (0.000354s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.285573 #25167]  INFO -- : (0.000454s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.285713 #25167]  INFO -- : (0.000081s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.286150 #25167]  INFO -- : (0.000125s) SELECT count(*) AS 'count' FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) LIMIT 1
+I, [2017-07-24T10:50:27.286460 #25167]  INFO -- : (0.000119s) SELECT `id` FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) LIMIT 1
+I, [2017-07-24T10:50:27.287123 #25167]  INFO -- : (0.000423s) SELECT count(*) AS 'count' FROM `roles` WHERE (`role_name` = 'Composer') LIMIT 1
+I, [2017-07-24T10:50:27.289822 #25167]  INFO -- : (0.000095s) SELECT `id` FROM `roles` WHERE (`role_name` = 'Composer') LIMIT 1
+I, [2017-07-24T10:50:27.290687 #25167]  INFO -- : (0.000247s) SELECT DISTINCT `filename`, `title`, `subtitle` FROM `recordings`, `pieces`, `pieces_recordings`, `people_roles_recordings` WHERE ((`recordings`.`id` = `people_roles_recordings`.`recording_id`) AND (`people_roles_recordings`.`person_id` = 1) AND (`people_roles_recordings`.`role_id` = 2) AND (`people_roles_recordings`.`recording_id` = `pieces_recordings`.`recording_id`) AND (`pieces`.`id` = `pieces_recordings`.`piece_id`)) ORDER BY `title`, `subtitle`
+I, [2017-07-24T10:50:27.297321 #25167]  INFO -- : (0.000330s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.297405 #25167]  INFO -- : (0.000020s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.297925 #25167]  INFO -- : (0.000077s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.298004 #25167]  INFO -- : (0.000021s) BEGIN
+I, [2017-07-24T10:50:27.298324 #25167]  INFO -- : (0.000172s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.298537 #25167]  INFO -- : (0.000073s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:27.298983 #25167]  INFO -- : (0.000353s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Handel', 'Georg Fridrick', '')
+I, [2017-07-24T10:50:27.303445 #25167]  INFO -- : (0.004277s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.304307 #25167]  INFO -- : (0.000235s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:27.304633 #25167]  INFO -- : (0.000100s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:27.305234 #25167]  INFO -- : (0.000345s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.305565 #25167]  INFO -- : (0.000105s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:27.306582 #25167]  INFO -- : (0.000081s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:27.306962 #25167]  INFO -- : (0.000120s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Music for the Royal Fireworks', '')
+I, [2017-07-24T10:50:27.311501 #25167]  INFO -- : (0.000197s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.311764 #25167]  INFO -- : (0.000064s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 1.wav', 537, '1984-01-01', '')
+I, [2017-07-24T10:50:27.311914 #25167]  INFO -- : (0.000051s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:27.312487 #25167]  INFO -- : (0.000054s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 3.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:27.312860 #25167]  INFO -- : (0.000208s) SELECT * FROM `pieces` WHERE (`title` = 'Music for the Royal Fireworks') ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:27.313119 #25167]  INFO -- : (0.000126s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 1.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.313294 #25167]  INFO -- : (0.000049s) INSERT INTO `pieces_recordings` (`piece_id`, `recording_id`) VALUES (6, 4)
+I, [2017-07-24T10:50:27.313877 #25167]  INFO -- : (0.000075s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:27.314071 #25167]  INFO -- : (0.000090s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 2.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.314197 #25167]  INFO -- : (0.000039s) INSERT INTO `pieces_recordings` (`piece_id`, `recording_id`) VALUES (4, 5)
+I, [2017-07-24T10:50:27.314705 #25167]  INFO -- : (0.000075s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Ach, mein hertzliches Jesulein')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:27.314898 #25167]  INFO -- : (0.000090s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 3.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.315026 #25167]  INFO -- : (0.000039s) INSERT INTO `pieces_recordings` (`piece_id`, `recording_id`) VALUES (5, 6)
+I, [2017-07-24T10:50:27.317389 #25167]  INFO -- : (0.000101s) SELECT * FROM `people` WHERE ((`surname` = 'Handel') AND (`given_name` = 'Georg Fridrick')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:27.317583 #25167]  INFO -- : (0.000066s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:27.317759 #25167]  INFO -- : (0.000085s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 1.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.318219 #25167]  INFO -- : (0.000045s) INSERT INTO `people_roles_recordings` (`person_id`, `role_id`, `recording_id`) VALUES (4, 4, 4)
+I, [2017-07-24T10:50:27.318422 #25167]  INFO -- : (0.000071s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:27.318570 #25167]  INFO -- : (0.000056s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:27.319089 #25167]  INFO -- : (0.000431s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 2.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.320581 #25167]  INFO -- : (0.000053s) INSERT INTO `people_roles_recordings` (`person_id`, `role_id`, `recording_id`) VALUES (3, 4, 5)
+I, [2017-07-24T10:50:27.321974 #25167]  INFO -- : (0.000093s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:27.322151 #25167]  INFO -- : (0.000073s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:27.322761 #25167]  INFO -- : (0.000515s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 3.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.322934 #25167]  INFO -- : (0.000055s) INSERT INTO `people_roles_recordings` (`person_id`, `role_id`, `recording_id`) VALUES (3, 4, 6)
+I, [2017-07-24T10:50:27.330445 #25167]  INFO -- : (0.007389s) COMMIT
+I, [2017-07-24T10:50:27.330658 #25167]  INFO -- : (0.000041s) BEGIN
+I, [2017-07-24T10:50:27.331020 #25167]  INFO -- : (0.000198s) DELETE FROM `roles` WHERE (`role_name` = 'Composer')
+I, [2017-07-24T10:50:27.333343 #25167]  INFO -- : (0.002227s) COMMIT
+I, [2017-07-24T10:50:27.341423 #25167]  INFO -- : (0.000478s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.341550 #25167]  INFO -- : (0.000035s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.341731 #25167]  INFO -- : (0.000103s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.342131 #25167]  INFO -- : (0.000133s) SELECT count(*) AS 'count' FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) LIMIT 1
+I, [2017-07-24T10:50:27.342808 #25167]  INFO -- : (0.000128s) SELECT `id` FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) LIMIT 1
+I, [2017-07-24T10:50:27.350787 #25167]  INFO -- : (0.007642s) SELECT count(*) AS 'count' FROM `roles` WHERE (`role_name` = 'Composer') LIMIT 1
+I, [2017-07-24T10:50:27.355394 #25167]  INFO -- : (0.000532s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.355512 #25167]  INFO -- : (0.000032s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.355781 #25167]  INFO -- : (0.000099s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.355911 #25167]  INFO -- : (0.000036s) BEGIN
+I, [2017-07-24T10:50:27.356400 #25167]  INFO -- : (0.000262s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.356687 #25167]  INFO -- : (0.000087s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:27.356887 #25167]  INFO -- : (0.000074s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Handel', 'Georg Fridrick', '')
+I, [2017-07-24T10:50:27.363359 #25167]  INFO -- : (0.006004s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.363928 #25167]  INFO -- : (0.000151s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:27.364115 #25167]  INFO -- : (0.000064s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:27.364413 #25167]  INFO -- : (0.000157s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.364946 #25167]  INFO -- : (0.000059s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:27.365084 #25167]  INFO -- : (0.000045s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:27.365221 #25167]  INFO -- : (0.000046s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Music for the Royal Fireworks', '')
+I, [2017-07-24T10:50:27.365430 #25167]  INFO -- : (0.000122s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.365594 #25167]  INFO -- : (0.000061s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 1.wav', 537, '1984-01-01', '')
+I, [2017-07-24T10:50:27.365738 #25167]  INFO -- : (0.000052s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:27.366214 #25167]  INFO -- : (0.000055s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 3.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:27.366527 #25167]  INFO -- : (0.000177s) SELECT * FROM `pieces` WHERE (`title` = 'Music for the Royal Fireworks') ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:27.366746 #25167]  INFO -- : (0.000108s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 1.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.371457 #25167]  INFO -- : (0.000142s) INSERT INTO `pieces_recordings` (`piece_id`, `recording_id`) VALUES (9, 7)
+I, [2017-07-24T10:50:27.372329 #25167]  INFO -- : (0.000319s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:27.373182 #25167]  INFO -- : (0.000294s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 2.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.374304 #25167]  INFO -- : (0.000897s) INSERT INTO `pieces_recordings` (`piece_id`, `recording_id`) VALUES (7, 8)
+I, [2017-07-24T10:50:27.374862 #25167]  INFO -- : (0.000250s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Ach, mein hertzliches Jesulein')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:27.383596 #25167]  INFO -- : (0.000300s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 3.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.383971 #25167]  INFO -- : (0.000085s) INSERT INTO `pieces_recordings` (`piece_id`, `recording_id`) VALUES (8, 9)
+I, [2017-07-24T10:50:27.384950 #25167]  INFO -- : (0.000129s) SELECT * FROM `people` WHERE ((`surname` = 'Handel') AND (`given_name` = 'Georg Fridrick')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:27.385213 #25167]  INFO -- : (0.000099s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:27.386598 #25167]  INFO -- : (0.001152s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 1.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.387036 #25167]  INFO -- : (0.000105s) INSERT INTO `people_roles_recordings` (`person_id`, `role_id`, `recording_id`) VALUES (6, 6, 7)
+I, [2017-07-24T10:50:27.388777 #25167]  INFO -- : (0.000140s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:27.391457 #25167]  INFO -- : (0.000099s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:27.391769 #25167]  INFO -- : (0.000140s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 2.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.392102 #25167]  INFO -- : (0.000074s) INSERT INTO `people_roles_recordings` (`person_id`, `role_id`, `recording_id`) VALUES (5, 6, 8)
+I, [2017-07-24T10:50:27.392451 #25167]  INFO -- : (0.000131s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:27.392691 #25167]  INFO -- : (0.000075s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:27.401787 #25167]  INFO -- : (0.000281s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 3.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.402191 #25167]  INFO -- : (0.000137s) INSERT INTO `people_roles_recordings` (`person_id`, `role_id`, `recording_id`) VALUES (5, 6, 9)
+I, [2017-07-24T10:50:27.411434 #25167]  INFO -- : (0.009040s) COMMIT
+I, [2017-07-24T10:50:27.411638 #25167]  INFO -- : (0.000053s) BEGIN
+I, [2017-07-24T10:50:27.411977 #25167]  INFO -- : (0.000164s) DELETE FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian'))
+I, [2017-07-24T10:50:27.412861 #25167]  INFO -- : (0.000837s) COMMIT
+I, [2017-07-24T10:50:27.413517 #25167]  INFO -- : (0.000289s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.413577 #25167]  INFO -- : (0.000021s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.413693 #25167]  INFO -- : (0.000070s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.413961 #25167]  INFO -- : (0.000088s) SELECT count(*) AS 'count' FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) LIMIT 1
+I, [2017-07-24T10:50:27.416070 #25167]  INFO -- : (0.000313s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.416138 #25167]  INFO -- : (0.000023s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.416254 #25167]  INFO -- : (0.000067s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.416501 #25167]  INFO -- : (0.000114s) DELETE FROM `collections` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.416611 #25167]  INFO -- : (0.000022s) BEGIN
+I, [2017-07-24T10:50:27.416850 #25167]  INFO -- : (0.000101s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('PJBE - Brass Splendour', '1984', 'great brass playing')
+I, [2017-07-24T10:50:27.419797 #25167]  INFO -- : (0.002890s) COMMIT
+I, [2017-07-24T10:50:27.420113 #25167]  INFO -- : (0.000098s) DELETE FROM `labels` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.420192 #25167]  INFO -- : (0.000020s) BEGIN
+I, [2017-07-24T10:50:27.420376 #25167]  INFO -- : (0.000087s) INSERT INTO `labels` (`label_name`) VALUES ('Apple')
+I, [2017-07-24T10:50:27.423625 #25167]  INFO -- : (0.003177s) COMMIT
+I, [2017-07-24T10:50:27.423781 #25167]  INFO -- : (0.000035s) BEGIN
+I, [2017-07-24T10:50:27.424015 #25167]  INFO -- : (0.000109s) INSERT INTO `labels` (`label_name`) VALUES ('London')
+I, [2017-07-24T10:50:27.426316 #25167]  INFO -- : (0.002241s) COMMIT
+I, [2017-07-24T10:50:27.426499 #25167]  INFO -- : (0.000039s) BEGIN
+I, [2017-07-24T10:50:27.426789 #25167]  INFO -- : (0.000134s) INSERT INTO `labels` (`label_name`) VALUES ('Nonesuch')
+I, [2017-07-24T10:50:27.427675 #25167]  INFO -- : (0.000821s) COMMIT
+I, [2017-07-24T10:50:27.428130 #25167]  INFO -- : (0.000174s) SELECT * FROM `collections` WHERE (`title` = 'PJBE - Brass Splendour') ORDER BY `title` LIMIT 1
+I, [2017-07-24T10:50:27.428334 #25167]  INFO -- : (0.000078s) SELECT * FROM `labels` WHERE (`label_name` = 'London') LIMIT 1
+I, [2017-07-24T10:50:27.428413 #25167]  INFO -- : (0.000020s) BEGIN
+I, [2017-07-24T10:50:27.428629 #25167]  INFO -- : (0.000093s) INSERT INTO `collections_labels` (`collection_id`, `label_id`) VALUES (1, 2)
+I, [2017-07-24T10:50:27.431131 #25167]  INFO -- : (0.002420s) COMMIT
+I, [2017-07-24T10:50:27.431840 #25167]  INFO -- : (0.000232s) SELECT * FROM `collections_labels` WHERE ((`collection_id` = 1) AND (`label_id` = 2))
+I, [2017-07-24T10:50:27.447365 #25167]  INFO -- : (0.008416s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.447538 #25167]  INFO -- : (0.000047s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.447758 #25167]  INFO -- : (0.000124s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.454598 #25167]  INFO -- : (0.006602s) DELETE FROM `collections` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.454853 #25167]  INFO -- : (0.000061s) BEGIN
+I, [2017-07-24T10:50:27.455384 #25167]  INFO -- : (0.000250s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('PJBE - Brass Splendour', '1984', 'great brass playing')
+I, [2017-07-24T10:50:27.464704 #25167]  INFO -- : (0.009172s) COMMIT
+I, [2017-07-24T10:50:27.467697 #25167]  INFO -- : (0.002139s) DELETE FROM `labels` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.467936 #25167]  INFO -- : (0.000051s) BEGIN
+I, [2017-07-24T10:50:27.468510 #25167]  INFO -- : (0.000253s) INSERT INTO `labels` (`label_name`) VALUES ('Apple')
+I, [2017-07-24T10:50:27.471905 #25167]  INFO -- : (0.003283s) COMMIT
+I, [2017-07-24T10:50:27.472067 #25167]  INFO -- : (0.000038s) BEGIN
+I, [2017-07-24T10:50:27.472331 #25167]  INFO -- : (0.000114s) INSERT INTO `labels` (`label_name`) VALUES ('London')
+I, [2017-07-24T10:50:27.473200 #25167]  INFO -- : (0.000819s) COMMIT
+I, [2017-07-24T10:50:27.473333 #25167]  INFO -- : (0.000041s) BEGIN
+I, [2017-07-24T10:50:27.473569 #25167]  INFO -- : (0.000112s) INSERT INTO `labels` (`label_name`) VALUES ('Nonesuch')
+I, [2017-07-24T10:50:27.474377 #25167]  INFO -- : (0.000747s) COMMIT
+I, [2017-07-24T10:50:27.474775 #25167]  INFO -- : (0.000147s) SELECT * FROM `collections` WHERE (`title` = 'No such collection') ORDER BY `title` LIMIT 1
+I, [2017-07-24T10:50:27.478177 #25167]  INFO -- : (0.000298s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.478251 #25167]  INFO -- : (0.000021s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.478401 #25167]  INFO -- : (0.000105s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.481828 #25167]  INFO -- : (0.003286s) DELETE FROM `collections` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.482008 #25167]  INFO -- : (0.000042s) BEGIN
+I, [2017-07-24T10:50:27.482338 #25167]  INFO -- : (0.000130s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('PJBE - Brass Splendour', '1984', 'great brass playing')
+I, [2017-07-24T10:50:27.483206 #25167]  INFO -- : (0.000766s) COMMIT
+I, [2017-07-24T10:50:27.487864 #25167]  INFO -- : (0.004326s) DELETE FROM `labels` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.488071 #25167]  INFO -- : (0.000049s) BEGIN
+I, [2017-07-24T10:50:27.488441 #25167]  INFO -- : (0.000166s) INSERT INTO `labels` (`label_name`) VALUES ('Apple')
+I, [2017-07-24T10:50:27.489405 #25167]  INFO -- : (0.000901s) COMMIT
+I, [2017-07-24T10:50:27.489521 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:27.489728 #25167]  INFO -- : (0.000106s) INSERT INTO `labels` (`label_name`) VALUES ('London')
+I, [2017-07-24T10:50:27.490553 #25167]  INFO -- : (0.000777s) COMMIT
+I, [2017-07-24T10:50:27.490658 #25167]  INFO -- : (0.000022s) BEGIN
+I, [2017-07-24T10:50:27.490824 #25167]  INFO -- : (0.000083s) INSERT INTO `labels` (`label_name`) VALUES ('Nonesuch')
+I, [2017-07-24T10:50:27.491567 #25167]  INFO -- : (0.000702s) COMMIT
+I, [2017-07-24T10:50:27.491920 #25167]  INFO -- : (0.000125s) SELECT * FROM `collections` WHERE (`title` = 'PJBE - Brass Splendour') ORDER BY `title` LIMIT 1
+I, [2017-07-24T10:50:27.492119 #25167]  INFO -- : (0.000077s) SELECT * FROM `labels` WHERE (`label_name` = 'no such label') LIMIT 1
+I, [2017-07-24T10:50:27.501296 #25167]  INFO -- : (0.000418s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.501423 #25167]  INFO -- : (0.000040s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.501621 #25167]  INFO -- : (0.000106s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.504308 #25167]  INFO -- : (0.002444s) DELETE FROM `collections` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.504525 #25167]  INFO -- : (0.000049s) BEGIN
+I, [2017-07-24T10:50:27.505328 #25167]  INFO -- : (0.000285s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('PJBE - Brass Splendour', '1984', 'great brass playing')
+I, [2017-07-24T10:50:27.520640 #25167]  INFO -- : (0.015119s) COMMIT
+I, [2017-07-24T10:50:27.522711 #25167]  INFO -- : (0.001537s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.522895 #25167]  INFO -- : (0.000043s) BEGIN
+I, [2017-07-24T10:50:27.523324 #25167]  INFO -- : (0.000193s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:27.524218 #25167]  INFO -- : (0.000817s) COMMIT
+I, [2017-07-24T10:50:27.524364 #25167]  INFO -- : (0.000030s) BEGIN
+I, [2017-07-24T10:50:27.524664 #25167]  INFO -- : (0.000141s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 5.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:27.525568 #25167]  INFO -- : (0.000832s) COMMIT
+I, [2017-07-24T10:50:27.525708 #25167]  INFO -- : (0.000035s) BEGIN
+I, [2017-07-24T10:50:27.525996 #25167]  INFO -- : (0.000138s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 6.wav', 243, '1984-01-01', '')
+I, [2017-07-24T10:50:27.526960 #25167]  INFO -- : (0.000906s) COMMIT
+I, [2017-07-24T10:50:27.527378 #25167]  INFO -- : (0.000148s) SELECT * FROM `collections` WHERE (`title` = 'PJBE - Brass Splendour') ORDER BY `title` LIMIT 1
+I, [2017-07-24T10:50:27.527683 #25167]  INFO -- : (0.000159s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 2.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.527764 #25167]  INFO -- : (0.000021s) BEGIN
+I, [2017-07-24T10:50:27.527969 #25167]  INFO -- : (0.000086s) INSERT INTO `collections_recordings` (`collection_id`, `recording_id`) VALUES (4, 10)
+I, [2017-07-24T10:50:27.528793 #25167]  INFO -- : (0.000780s) COMMIT
+I, [2017-07-24T10:50:27.529079 #25167]  INFO -- : (0.000085s) SELECT * FROM `collections_recordings` WHERE ((`collection_id` = 4) AND (`recording_id` = 10))
+I, [2017-07-24T10:50:27.531903 #25167]  INFO -- : (0.000341s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.532000 #25167]  INFO -- : (0.000043s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.532129 #25167]  INFO -- : (0.000073s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.548251 #25167]  INFO -- : (0.015936s) DELETE FROM `collections` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.548496 #25167]  INFO -- : (0.000059s) BEGIN
+I, [2017-07-24T10:50:27.548995 #25167]  INFO -- : (0.000203s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('PJBE - Brass Splendour', '1984', 'great brass playing')
+I, [2017-07-24T10:50:27.550236 #25167]  INFO -- : (0.001129s) COMMIT
+I, [2017-07-24T10:50:27.551448 #25167]  INFO -- : (0.000994s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.551546 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:27.551798 #25167]  INFO -- : (0.000115s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:27.558157 #25167]  INFO -- : (0.006283s) COMMIT
+I, [2017-07-24T10:50:27.558382 #25167]  INFO -- : (0.000050s) BEGIN
+I, [2017-07-24T10:50:27.558795 #25167]  INFO -- : (0.000174s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 5.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:27.561517 #25167]  INFO -- : (0.002654s) COMMIT
+I, [2017-07-24T10:50:27.561696 #25167]  INFO -- : (0.000031s) BEGIN
+I, [2017-07-24T10:50:27.562000 #25167]  INFO -- : (0.000163s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 6.wav', 243, '1984-01-01', '')
+I, [2017-07-24T10:50:27.562997 #25167]  INFO -- : (0.000935s) COMMIT
+I, [2017-07-24T10:50:27.564371 #25167]  INFO -- : (0.000135s) SELECT * FROM `collections` WHERE (`title` = 'No such collection') ORDER BY `title` LIMIT 1
+I, [2017-07-24T10:50:27.572680 #25167]  INFO -- : (0.005354s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.573191 #25167]  INFO -- : (0.000120s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.573762 #25167]  INFO -- : (0.000324s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.581510 #25167]  INFO -- : (0.007343s) DELETE FROM `collections` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.581773 #25167]  INFO -- : (0.000060s) BEGIN
+I, [2017-07-24T10:50:27.582282 #25167]  INFO -- : (0.000220s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('PJBE - Brass Splendour', '1984', 'great brass playing')
+I, [2017-07-24T10:50:27.583241 #25167]  INFO -- : (0.000872s) COMMIT
+I, [2017-07-24T10:50:27.584415 #25167]  INFO -- : (0.000925s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.584566 #25167]  INFO -- : (0.000068s) BEGIN
+I, [2017-07-24T10:50:27.584831 #25167]  INFO -- : (0.000110s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:27.585674 #25167]  INFO -- : (0.000795s) COMMIT
+I, [2017-07-24T10:50:27.585777 #25167]  INFO -- : (0.000023s) BEGIN
+I, [2017-07-24T10:50:27.586016 #25167]  INFO -- : (0.000106s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 5.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:27.586776 #25167]  INFO -- : (0.000716s) COMMIT
+I, [2017-07-24T10:50:27.586872 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:27.591079 #25167]  INFO -- : (0.003932s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 6.wav', 243, '1984-01-01', '')
+I, [2017-07-24T10:50:27.594035 #25167]  INFO -- : (0.001026s) COMMIT
+I, [2017-07-24T10:50:27.594606 #25167]  INFO -- : (0.000183s) SELECT * FROM `collections` WHERE (`title` = 'PJBE - Brass Splendour') ORDER BY `title` LIMIT 1
+I, [2017-07-24T10:50:27.594978 #25167]  INFO -- : (0.000159s) SELECT * FROM `recordings` WHERE (`filename` = 'no such filename') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.604481 #25167]  INFO -- : (0.005539s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.604909 #25167]  INFO -- : (0.000119s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.605554 #25167]  INFO -- : (0.000411s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.611239 #25167]  INFO -- : (0.005056s) DELETE FROM `collections` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.611915 #25167]  INFO -- : (0.000227s) SELECT count(*) AS 'count' FROM `collections` LIMIT 1
+I, [2017-07-24T10:50:27.614297 #25167]  INFO -- : (0.000346s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.614371 #25167]  INFO -- : (0.000026s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.614556 #25167]  INFO -- : (0.000086s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.614800 #25167]  INFO -- : (0.000100s) DELETE FROM `collections` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.614902 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:27.618004 #25167]  INFO -- : (0.002882s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('PJBE - Brass Splendour', '1984', 'Some great brass playing')
+I, [2017-07-24T10:50:27.619965 #25167]  INFO -- : (0.001855s) COMMIT
+I, [2017-07-24T10:50:27.620393 #25167]  INFO -- : (0.000111s) SELECT count(*) AS 'count' FROM `collections` LIMIT 1
+I, [2017-07-24T10:50:27.629536 #25167]  INFO -- : (0.000370s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.629641 #25167]  INFO -- : (0.000025s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.629769 #25167]  INFO -- : (0.000074s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.632035 #25167]  INFO -- : (0.002093s) DELETE FROM `collections` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.632237 #25167]  INFO -- : (0.000045s) BEGIN
+I, [2017-07-24T10:50:27.632650 #25167]  INFO -- : (0.000162s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('PJBE - Brass Splendour', '1984', 'Some great brass playing')
+I, [2017-07-24T10:50:27.635153 #25167]  INFO -- : (0.002375s) COMMIT
+I, [2017-07-24T10:50:27.641271 #25167]  INFO -- : (0.002533s) SELECT * FROM `collections` WHERE (`title` = 'PJBE - Brass Splendour') ORDER BY `title` LIMIT 1
+I, [2017-07-24T10:50:27.646738 #25167]  INFO -- : (0.000313s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.646835 #25167]  INFO -- : (0.000028s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.646976 #25167]  INFO -- : (0.000083s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.648254 #25167]  INFO -- : (0.001111s) DELETE FROM `collections` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.648410 #25167]  INFO -- : (0.000033s) BEGIN
+I, [2017-07-24T10:50:27.648722 #25167]  INFO -- : (0.000130s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('B collection', '2000', 'Should be second')
+I, [2017-07-24T10:50:27.684127 #25167]  INFO -- : (0.035275s) COMMIT
+I, [2017-07-24T10:50:27.684487 #25167]  INFO -- : (0.000065s) BEGIN
+I, [2017-07-24T10:50:27.684954 #25167]  INFO -- : (0.000226s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('C collection', '2000', 'Should be third')
+I, [2017-07-24T10:50:27.685993 #25167]  INFO -- : (0.000952s) COMMIT
+I, [2017-07-24T10:50:27.686178 #25167]  INFO -- : (0.000040s) BEGIN
+I, [2017-07-24T10:50:27.686664 #25167]  INFO -- : (0.000281s) INSERT INTO `collections` (`title`, `year_released`, `remarks`) VALUES ('A collection', '2000', 'Should be first')
+I, [2017-07-24T10:50:27.687906 #25167]  INFO -- : (0.001148s) COMMIT
+I, [2017-07-24T10:50:27.688418 #25167]  INFO -- : (0.000253s) SELECT * FROM `recordings` ORDER BY `filename`
+I, [2017-07-24T10:50:27.692530 #25167]  INFO -- : (0.000492s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.692660 #25167]  INFO -- : (0.000028s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.692788 #25167]  INFO -- : (0.000075s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.693079 #25167]  INFO -- : (0.000141s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.693185 #25167]  INFO -- : (0.000031s) BEGIN
+I, [2017-07-24T10:50:27.693449 #25167]  INFO -- : (0.000129s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Concert Band')
+I, [2017-07-24T10:50:27.700397 #25167]  INFO -- : (0.006810s) COMMIT
+I, [2017-07-24T10:50:27.700699 #25167]  INFO -- : (0.000053s) BEGIN
+I, [2017-07-24T10:50:27.701080 #25167]  INFO -- : (0.000182s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Military Band')
+I, [2017-07-24T10:50:27.703755 #25167]  INFO -- : (0.002588s) COMMIT
+I, [2017-07-24T10:50:27.704243 #25167]  INFO -- : (0.000159s) SELECT * FROM `group_types` WHERE (`group_type_name` = 'Concert Band') LIMIT 1
+I, [2017-07-24T10:50:27.704495 #25167]  INFO -- : (0.000091s) SELECT * FROM `group_types` WHERE (`group_type_name` = 'Military Band') LIMIT 1
+I, [2017-07-24T10:50:27.704589 #25167]  INFO -- : (0.000025s) BEGIN
+I, [2017-07-24T10:50:27.704848 #25167]  INFO -- : (0.000115s) INSERT INTO `group_type_synonyms` (`base_group_type_id`, `synonym_group_type_id`) VALUES (1, 2)
+I, [2017-07-24T10:50:27.707738 #25167]  INFO -- : (0.002796s) COMMIT
+I, [2017-07-24T10:50:27.709964 #25167]  INFO -- : (0.000793s) SELECT `id` FROM `group_types` WHERE (`group_type_name` = 'Concert Band') LIMIT 1
+I, [2017-07-24T10:50:27.710799 #25167]  INFO -- : (0.000237s) SELECT `id` FROM `group_types` WHERE (`group_type_name` = 'Military Band') LIMIT 1
+I, [2017-07-24T10:50:27.714769 #25167]  INFO -- : (0.003658s) SELECT * FROM `group_type_synonyms` WHERE ((`base_group_type_id` = 1) AND (`synonym_group_type_id` = 2)) LIMIT 1
+I, [2017-07-24T10:50:27.717493 #25167]  INFO -- : (0.000156s) SELECT * FROM `group_type_synonyms` WHERE ((`base_group_type_id` = 1) AND (`synonym_group_type_id` = 2)) LIMIT 1
+I, [2017-07-24T10:50:27.719042 #25167]  INFO -- : (0.000333s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.719113 #25167]  INFO -- : (0.000023s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.721239 #25167]  INFO -- : (0.000095s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.734112 #25167]  INFO -- : (0.012644s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.734526 #25167]  INFO -- : (0.000113s) BEGIN
+I, [2017-07-24T10:50:27.734999 #25167]  INFO -- : (0.000223s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Concert Band')
+I, [2017-07-24T10:50:27.737532 #25167]  INFO -- : (0.002468s) COMMIT
+I, [2017-07-24T10:50:27.737730 #25167]  INFO -- : (0.000057s) BEGIN
+I, [2017-07-24T10:50:27.738000 #25167]  INFO -- : (0.000133s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Military Band')
+I, [2017-07-24T10:50:27.738804 #25167]  INFO -- : (0.000757s) COMMIT
+I, [2017-07-24T10:50:27.739199 #25167]  INFO -- : (0.000144s) SELECT * FROM `group_types` WHERE (`group_type_name` = 'Concert Band') LIMIT 1
+I, [2017-07-24T10:50:27.739515 #25167]  INFO -- : (0.000120s) SELECT * FROM `group_types` WHERE (`group_type_name` = 'Military Band') LIMIT 1
+I, [2017-07-24T10:50:27.739614 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:27.739881 #25167]  INFO -- : (0.000112s) INSERT INTO `group_type_synonyms` (`base_group_type_id`, `synonym_group_type_id`) VALUES (3, 4)
+I, [2017-07-24T10:50:27.740718 #25167]  INFO -- : (0.000782s) COMMIT
+I, [2017-07-24T10:50:27.741047 #25167]  INFO -- : (0.000096s) SELECT `id` FROM `group_types` WHERE (`group_type_name` = 'Military Band') LIMIT 1
+I, [2017-07-24T10:50:27.741235 #25167]  INFO -- : (0.000077s) SELECT `base_group_type_id` FROM `group_type_synonyms` WHERE (`synonym_group_type_id` = 4) LIMIT 1
+I, [2017-07-24T10:50:27.741388 #25167]  INFO -- : (0.000065s) SELECT * FROM `group_types` WHERE (`id` = 3) LIMIT 1
+I, [2017-07-24T10:50:27.748835 #25167]  INFO -- : (0.000770s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.748956 #25167]  INFO -- : (0.000029s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.749149 #25167]  INFO -- : (0.000114s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.754888 #25167]  INFO -- : (0.005437s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.755094 #25167]  INFO -- : (0.000048s) BEGIN
+I, [2017-07-24T10:50:27.755537 #25167]  INFO -- : (0.000165s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:27.756366 #25167]  INFO -- : (0.000750s) COMMIT
+I, [2017-07-24T10:50:27.757462 #25167]  INFO -- : (0.000874s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.757590 #25167]  INFO -- : (0.000029s) BEGIN
+I, [2017-07-24T10:50:27.757853 #25167]  INFO -- : (0.000115s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:27.777839 #25167]  INFO -- : (0.019754s) COMMIT
+I, [2017-07-24T10:50:27.779320 #25167]  INFO -- : (0.000325s) BEGIN
+I, [2017-07-24T10:50:27.780380 #25167]  INFO -- : (0.000568s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 5.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:27.783965 #25167]  INFO -- : (0.003375s) COMMIT
+I, [2017-07-24T10:50:27.784170 #25167]  INFO -- : (0.000040s) BEGIN
+I, [2017-07-24T10:50:27.784507 #25167]  INFO -- : (0.000152s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 6.wav', 243, '1984-01-01', '')
+I, [2017-07-24T10:50:27.785404 #25167]  INFO -- : (0.000833s) COMMIT
+I, [2017-07-24T10:50:27.785788 #25167]  INFO -- : (0.000120s) SELECT * FROM `group_types` WHERE (`group_type_name` = 'Brass Ensemble') LIMIT 1
+I, [2017-07-24T10:50:27.786143 #25167]  INFO -- : (0.000164s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 2.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.786311 #25167]  INFO -- : (0.000049s) BEGIN
+I, [2017-07-24T10:50:27.786785 #25167]  INFO -- : (0.000229s) INSERT INTO `group_types_recordings` (`group_type_id`, `recording_id`) VALUES (5, 19)
+I, [2017-07-24T10:50:27.792300 #25167]  INFO -- : (0.005395s) COMMIT
+I, [2017-07-24T10:50:27.792833 #25167]  INFO -- : (0.000174s) SELECT * FROM `group_types_recordings` WHERE ((`group_type_id` = 5) AND (`recording_id` = 19))
+I, [2017-07-24T10:50:27.794424 #25167]  INFO -- : (0.000329s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.794491 #25167]  INFO -- : (0.000022s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.794604 #25167]  INFO -- : (0.000067s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.805902 #25167]  INFO -- : (0.011158s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.806340 #25167]  INFO -- : (0.000109s) BEGIN
+I, [2017-07-24T10:50:27.806957 #25167]  INFO -- : (0.000267s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:27.808056 #25167]  INFO -- : (0.001016s) COMMIT
+I, [2017-07-24T10:50:27.809211 #25167]  INFO -- : (0.000952s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.809319 #25167]  INFO -- : (0.000028s) BEGIN
+I, [2017-07-24T10:50:27.809610 #25167]  INFO -- : (0.000128s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:27.814129 #25167]  INFO -- : (0.004444s) COMMIT
+I, [2017-07-24T10:50:27.814357 #25167]  INFO -- : (0.000050s) BEGIN
+I, [2017-07-24T10:50:27.814795 #25167]  INFO -- : (0.000216s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 5.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:27.829116 #25167]  INFO -- : (0.014176s) COMMIT
+I, [2017-07-24T10:50:27.829594 #25167]  INFO -- : (0.000115s) BEGIN
+I, [2017-07-24T10:50:27.830220 #25167]  INFO -- : (0.000295s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 6.wav', 243, '1984-01-01', '')
+I, [2017-07-24T10:50:27.831354 #25167]  INFO -- : (0.001046s) COMMIT
+I, [2017-07-24T10:50:27.831840 #25167]  INFO -- : (0.000176s) SELECT * FROM `group_types` WHERE (`group_type_name` = 'No such group_type') LIMIT 1
+I, [2017-07-24T10:50:27.835751 #25167]  INFO -- : (0.000313s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.839728 #25167]  INFO -- : (0.000092s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.840064 #25167]  INFO -- : (0.000210s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.843006 #25167]  INFO -- : (0.002617s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.843230 #25167]  INFO -- : (0.000075s) BEGIN
+I, [2017-07-24T10:50:27.843596 #25167]  INFO -- : (0.000168s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:27.845195 #25167]  INFO -- : (0.001539s) COMMIT
+I, [2017-07-24T10:50:27.858443 #25167]  INFO -- : (0.012988s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.858689 #25167]  INFO -- : (0.000056s) BEGIN
+I, [2017-07-24T10:50:27.859215 #25167]  INFO -- : (0.000238s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:27.860257 #25167]  INFO -- : (0.000946s) COMMIT
+I, [2017-07-24T10:50:27.860418 #25167]  INFO -- : (0.000040s) BEGIN
+I, [2017-07-24T10:50:27.860755 #25167]  INFO -- : (0.000147s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 5.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:27.861613 #25167]  INFO -- : (0.000791s) COMMIT
+I, [2017-07-24T10:50:27.861734 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:27.861994 #25167]  INFO -- : (0.000128s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 6.wav', 243, '1984-01-01', '')
+I, [2017-07-24T10:50:27.862813 #25167]  INFO -- : (0.000740s) COMMIT
+I, [2017-07-24T10:50:27.863184 #25167]  INFO -- : (0.000115s) SELECT * FROM `group_types` WHERE (`group_type_name` = 'Brass Ensemble') LIMIT 1
+I, [2017-07-24T10:50:27.863415 #25167]  INFO -- : (0.000100s) SELECT * FROM `recordings` WHERE (`filename` = 'no such filename') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:27.866479 #25167]  INFO -- : (0.000271s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.866547 #25167]  INFO -- : (0.000023s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.866666 #25167]  INFO -- : (0.000060s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.869720 #25167]  INFO -- : (0.002908s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.873906 #25167]  INFO -- : (0.000452s) SELECT count(*) AS 'count' FROM `group_types` LIMIT 1
+I, [2017-07-24T10:50:27.877404 #25167]  INFO -- : (0.000396s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.877490 #25167]  INFO -- : (0.000019s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.877620 #25167]  INFO -- : (0.000086s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.877868 #25167]  INFO -- : (0.000115s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.877955 #25167]  INFO -- : (0.000020s) BEGIN
+I, [2017-07-24T10:50:27.878169 #25167]  INFO -- : (0.000106s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:27.883832 #25167]  INFO -- : (0.005592s) COMMIT
+I, [2017-07-24T10:50:27.884322 #25167]  INFO -- : (0.000125s) SELECT count(*) AS 'count' FROM `group_types` LIMIT 1
+I, [2017-07-24T10:50:27.885935 #25167]  INFO -- : (0.000284s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.892437 #25167]  INFO -- : (0.006364s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.893151 #25167]  INFO -- : (0.000311s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.895937 #25167]  INFO -- : (0.002410s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.896109 #25167]  INFO -- : (0.000037s) BEGIN
+I, [2017-07-24T10:50:27.896437 #25167]  INFO -- : (0.000160s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:27.900209 #25167]  INFO -- : (0.003697s) COMMIT
+I, [2017-07-24T10:50:27.900832 #25167]  INFO -- : (0.000300s) SELECT * FROM `group_types` ORDER BY `group_type_name` LIMIT 1
+I, [2017-07-24T10:50:27.902690 #25167]  INFO -- : (0.000370s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.908799 #25167]  INFO -- : (0.005979s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.909036 #25167]  INFO -- : (0.000110s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.910490 #25167]  INFO -- : (0.001225s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.910684 #25167]  INFO -- : (0.000037s) BEGIN
+I, [2017-07-24T10:50:27.910998 #25167]  INFO -- : (0.000132s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:27.913008 #25167]  INFO -- : (0.001935s) COMMIT
+I, [2017-07-24T10:50:27.913185 #25167]  INFO -- : (0.000038s) BEGIN
+I, [2017-07-24T10:50:27.913498 #25167]  INFO -- : (0.000151s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Quintet')
+I, [2017-07-24T10:50:27.915125 #25167]  INFO -- : (0.001517s) COMMIT
+I, [2017-07-24T10:50:27.918296 #25167]  INFO -- : (0.000326s) SELECT count(*) AS 'count' FROM `group_types` LIMIT 1
+I, [2017-07-24T10:50:27.923793 #25167]  INFO -- : (0.000367s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.923896 #25167]  INFO -- : (0.000028s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.924064 #25167]  INFO -- : (0.000086s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.946306 #25167]  INFO -- : (0.022051s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.946632 #25167]  INFO -- : (0.000066s) BEGIN
+I, [2017-07-24T10:50:27.947693 #25167]  INFO -- : (0.000665s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:27.950531 #25167]  INFO -- : (0.002305s) COMMIT
+I, [2017-07-24T10:50:27.950832 #25167]  INFO -- : (0.000058s) BEGIN
+I, [2017-07-24T10:50:27.954649 #25167]  INFO -- : (0.003472s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Quintet')
+I, [2017-07-24T10:50:27.955691 #25167]  INFO -- : (0.000935s) COMMIT
+I, [2017-07-24T10:50:27.956198 #25167]  INFO -- : (0.000133s) SELECT * FROM `group_types` WHERE (`group_type_name` = 'Brass Quintet') LIMIT 1
+I, [2017-07-24T10:50:27.957825 #25167]  INFO -- : (0.000302s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.957880 #25167]  INFO -- : (0.000018s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.958000 #25167]  INFO -- : (0.000057s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.967924 #25167]  INFO -- : (0.009783s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.968221 #25167]  INFO -- : (0.000065s) BEGIN
+I, [2017-07-24T10:50:27.968762 #25167]  INFO -- : (0.000237s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Rock Band')
+I, [2017-07-24T10:50:27.970103 #25167]  INFO -- : (0.001229s) COMMIT
+I, [2017-07-24T10:50:27.970306 #25167]  INFO -- : (0.000045s) BEGIN
+I, [2017-07-24T10:50:27.970711 #25167]  INFO -- : (0.000193s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:27.971848 #25167]  INFO -- : (0.001013s) COMMIT
+I, [2017-07-24T10:50:27.972021 #25167]  INFO -- : (0.000055s) BEGIN
+I, [2017-07-24T10:50:27.972385 #25167]  INFO -- : (0.000179s) INSERT INTO `group_types` (`group_type_name`) VALUES ('String Quartet')
+I, [2017-07-24T10:50:27.977778 #25167]  INFO -- : (0.005276s) COMMIT
+I, [2017-07-24T10:50:27.978201 #25167]  INFO -- : (0.000186s) SELECT * FROM `group_types` ORDER BY `group_type_name`
+I, [2017-07-24T10:50:27.980902 #25167]  INFO -- : (0.000341s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:27.980977 #25167]  INFO -- : (0.000022s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:27.981109 #25167]  INFO -- : (0.000084s) SELECT sqlite_version()
+I, [2017-07-24T10:50:27.981328 #25167]  INFO -- : (0.000095s) DELETE FROM `groups` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.981442 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:27.981721 #25167]  INFO -- : (0.000118s) INSERT INTO `groups` (`group_name`) VALUES ('Philip Jones Brass Ensemble')
+I, [2017-07-24T10:50:27.988725 #25167]  INFO -- : (0.006920s) COMMIT
+I, [2017-07-24T10:50:27.989133 #25167]  INFO -- : (0.000083s) BEGIN
+I, [2017-07-24T10:50:27.989739 #25167]  INFO -- : (0.000274s) INSERT INTO `groups` (`group_name`) VALUES ('Canadian Brass')
+I, [2017-07-24T10:50:27.991317 #25167]  INFO -- : (0.001469s) COMMIT
+I, [2017-07-24T10:50:27.991529 #25167]  INFO -- : (0.000044s) BEGIN
+I, [2017-07-24T10:50:27.991925 #25167]  INFO -- : (0.000186s) INSERT INTO `groups` (`group_name`) VALUES ('Aerosmith')
+I, [2017-07-24T10:50:27.992737 #25167]  INFO -- : (0.000758s) COMMIT
+I, [2017-07-24T10:50:27.993832 #25167]  INFO -- : (0.000899s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:27.993923 #25167]  INFO -- : (0.000022s) BEGIN
+I, [2017-07-24T10:50:27.994123 #25167]  INFO -- : (0.000099s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:27.994969 #25167]  INFO -- : (0.000801s) COMMIT
+I, [2017-07-24T10:50:27.995071 #25167]  INFO -- : (0.000022s) BEGIN
+I, [2017-07-24T10:50:27.996754 #25167]  INFO -- : (0.000124s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Quintet')
+I, [2017-07-24T10:50:27.997593 #25167]  INFO -- : (0.000786s) COMMIT
+I, [2017-07-24T10:50:27.997717 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:27.997926 #25167]  INFO -- : (0.000101s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Rock Band')
+I, [2017-07-24T10:50:27.998678 #25167]  INFO -- : (0.000707s) COMMIT
+I, [2017-07-24T10:50:27.999001 #25167]  INFO -- : (0.000108s) SELECT * FROM `groups` WHERE (`group_name` = 'Philip Jones Brass Ensemble') LIMIT 1
+I, [2017-07-24T10:50:28.004853 #25167]  INFO -- : (0.005698s) SELECT * FROM `group_types` WHERE (`group_type_name` = 'Brass Ensemble') LIMIT 1
+I, [2017-07-24T10:50:28.005117 #25167]  INFO -- : (0.000059s) BEGIN
+I, [2017-07-24T10:50:28.005601 #25167]  INFO -- : (0.000188s) INSERT INTO `groups_group_types` (`group_id`, `group_type_id`) VALUES (1, 17)
+I, [2017-07-24T10:50:28.006763 #25167]  INFO -- : (0.001085s) COMMIT
+I, [2017-07-24T10:50:28.007117 #25167]  INFO -- : (0.000125s) SELECT * FROM `groups_group_types` WHERE ((`group_id` = 1) AND (`group_type_id` = 17))
+I, [2017-07-24T10:50:28.008368 #25167]  INFO -- : (0.000255s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.008420 #25167]  INFO -- : (0.000018s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.008546 #25167]  INFO -- : (0.000085s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.013732 #25167]  INFO -- : (0.004932s) DELETE FROM `groups` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.013921 #25167]  INFO -- : (0.000044s) BEGIN
+I, [2017-07-24T10:50:28.014215 #25167]  INFO -- : (0.000127s) INSERT INTO `groups` (`group_name`) VALUES ('Philip Jones Brass Ensemble')
+I, [2017-07-24T10:50:28.034883 #25167]  INFO -- : (0.020591s) COMMIT
+I, [2017-07-24T10:50:28.035143 #25167]  INFO -- : (0.000052s) BEGIN
+I, [2017-07-24T10:50:28.035540 #25167]  INFO -- : (0.000168s) INSERT INTO `groups` (`group_name`) VALUES ('Canadian Brass')
+I, [2017-07-24T10:50:28.036490 #25167]  INFO -- : (0.000874s) COMMIT
+I, [2017-07-24T10:50:28.036699 #25167]  INFO -- : (0.000038s) BEGIN
+I, [2017-07-24T10:50:28.036926 #25167]  INFO -- : (0.000101s) INSERT INTO `groups` (`group_name`) VALUES ('Aerosmith')
+I, [2017-07-24T10:50:28.037635 #25167]  INFO -- : (0.000664s) COMMIT
+I, [2017-07-24T10:50:28.038690 #25167]  INFO -- : (0.000884s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.038798 #25167]  INFO -- : (0.000043s) BEGIN
+I, [2017-07-24T10:50:28.038992 #25167]  INFO -- : (0.000098s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:28.039788 #25167]  INFO -- : (0.000754s) COMMIT
+I, [2017-07-24T10:50:28.039879 #25167]  INFO -- : (0.000021s) BEGIN
+I, [2017-07-24T10:50:28.040066 #25167]  INFO -- : (0.000099s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Quintet')
+I, [2017-07-24T10:50:28.040890 #25167]  INFO -- : (0.000781s) COMMIT
+I, [2017-07-24T10:50:28.040988 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:28.041181 #25167]  INFO -- : (0.000101s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Rock Band')
+I, [2017-07-24T10:50:28.043202 #25167]  INFO -- : (0.001971s) COMMIT
+I, [2017-07-24T10:50:28.043640 #25167]  INFO -- : (0.000130s) SELECT * FROM `groups` WHERE (`group_name` = 'No such group') LIMIT 1
+I, [2017-07-24T10:50:28.048525 #25167]  INFO -- : (0.000495s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.048646 #25167]  INFO -- : (0.000029s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.048799 #25167]  INFO -- : (0.000089s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.050214 #25167]  INFO -- : (0.001209s) DELETE FROM `groups` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.050376 #25167]  INFO -- : (0.000039s) BEGIN
+I, [2017-07-24T10:50:28.050714 #25167]  INFO -- : (0.000153s) INSERT INTO `groups` (`group_name`) VALUES ('Philip Jones Brass Ensemble')
+I, [2017-07-24T10:50:28.051891 #25167]  INFO -- : (0.001111s) COMMIT
+I, [2017-07-24T10:50:28.052006 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:28.052267 #25167]  INFO -- : (0.000129s) INSERT INTO `groups` (`group_name`) VALUES ('Canadian Brass')
+I, [2017-07-24T10:50:28.061770 #25167]  INFO -- : (0.009428s) COMMIT
+I, [2017-07-24T10:50:28.061953 #25167]  INFO -- : (0.000041s) BEGIN
+I, [2017-07-24T10:50:28.062230 #25167]  INFO -- : (0.000125s) INSERT INTO `groups` (`group_name`) VALUES ('Aerosmith')
+I, [2017-07-24T10:50:28.062975 #25167]  INFO -- : (0.000699s) COMMIT
+I, [2017-07-24T10:50:28.064035 #25167]  INFO -- : (0.000885s) DELETE FROM `group_types` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.064132 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:28.064344 #25167]  INFO -- : (0.000117s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Ensemble')
+I, [2017-07-24T10:50:28.065097 #25167]  INFO -- : (0.000711s) COMMIT
+I, [2017-07-24T10:50:28.065182 #25167]  INFO -- : (0.000019s) BEGIN
+I, [2017-07-24T10:50:28.065361 #25167]  INFO -- : (0.000095s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Brass Quintet')
+I, [2017-07-24T10:50:28.066133 #25167]  INFO -- : (0.000730s) COMMIT
+I, [2017-07-24T10:50:28.066244 #25167]  INFO -- : (0.000023s) BEGIN
+I, [2017-07-24T10:50:28.066428 #25167]  INFO -- : (0.000098s) INSERT INTO `group_types` (`group_type_name`) VALUES ('Rock Band')
+I, [2017-07-24T10:50:28.067290 #25167]  INFO -- : (0.000819s) COMMIT
+I, [2017-07-24T10:50:28.067643 #25167]  INFO -- : (0.000125s) SELECT * FROM `groups` WHERE (`group_name` = 'Philip Jones Brass Ensemble') LIMIT 1
+I, [2017-07-24T10:50:28.067861 #25167]  INFO -- : (0.000077s) SELECT * FROM `group_types` WHERE (`group_type_name` = 'no such group_type') LIMIT 1
+I, [2017-07-24T10:50:28.082253 #25167]  INFO -- : (0.000294s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.082330 #25167]  INFO -- : (0.000018s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.082464 #25167]  INFO -- : (0.000090s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.085090 #25167]  INFO -- : (0.002491s) DELETE FROM `groups` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.085728 #25167]  INFO -- : (0.000176s) SELECT count(*) AS 'count' FROM `groups` LIMIT 1
+I, [2017-07-24T10:50:28.093701 #25167]  INFO -- : (0.000831s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.093888 #25167]  INFO -- : (0.000041s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.094125 #25167]  INFO -- : (0.000147s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.094488 #25167]  INFO -- : (0.000128s) DELETE FROM `groups` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.094658 #25167]  INFO -- : (0.000040s) BEGIN
+I, [2017-07-24T10:50:28.095062 #25167]  INFO -- : (0.000189s) INSERT INTO `groups` (`group_name`) VALUES ('Philip Jones Brass Ensemble')
+I, [2017-07-24T10:50:28.099037 #25167]  INFO -- : (0.003874s) COMMIT
+I, [2017-07-24T10:50:28.099626 #25167]  INFO -- : (0.000150s) SELECT count(*) AS 'count' FROM `groups` LIMIT 1
+I, [2017-07-24T10:50:28.101210 #25167]  INFO -- : (0.000322s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.101277 #25167]  INFO -- : (0.000022s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.101387 #25167]  INFO -- : (0.000061s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.104138 #25167]  INFO -- : (0.002613s) DELETE FROM `groups` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.104357 #25167]  INFO -- : (0.000048s) BEGIN
+I, [2017-07-24T10:50:28.104744 #25167]  INFO -- : (0.000153s) INSERT INTO `groups` (`group_name`) VALUES ('Philip Jones Brass Ensemble')
+I, [2017-07-24T10:50:28.105600 #25167]  INFO -- : (0.000792s) COMMIT
+I, [2017-07-24T10:50:28.106001 #25167]  INFO -- : (0.000213s) SELECT * FROM `groups` ORDER BY `group_name` LIMIT 1
+I, [2017-07-24T10:50:28.119344 #25167]  INFO -- : (0.000472s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.119450 #25167]  INFO -- : (0.000028s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.119612 #25167]  INFO -- : (0.000089s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.120716 #25167]  INFO -- : (0.000959s) DELETE FROM `groups` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.120865 #25167]  INFO -- : (0.000030s) BEGIN
+I, [2017-07-24T10:50:28.121091 #25167]  INFO -- : (0.000095s) INSERT INTO `groups` (`group_name`) VALUES ('Philip Jones Brass Ensemble')
+I, [2017-07-24T10:50:28.121850 #25167]  INFO -- : (0.000710s) COMMIT
+I, [2017-07-24T10:50:28.121942 #25167]  INFO -- : (0.000020s) BEGIN
+I, [2017-07-24T10:50:28.122116 #25167]  INFO -- : (0.000088s) INSERT INTO `groups` (`group_name`) VALUES ('Canadian Brass')
+I, [2017-07-24T10:50:28.122917 #25167]  INFO -- : (0.000759s) COMMIT
+I, [2017-07-24T10:50:28.123226 #25167]  INFO -- : (0.000101s) SELECT count(*) AS 'count' FROM `groups` LIMIT 1
+I, [2017-07-24T10:50:28.124707 #25167]  INFO -- : (0.000299s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.124760 #25167]  INFO -- : (0.000017s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.124853 #25167]  INFO -- : (0.000053s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.135567 #25167]  INFO -- : (0.010534s) DELETE FROM `groups` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.136062 #25167]  INFO -- : (0.000134s) BEGIN
+I, [2017-07-24T10:50:28.136637 #25167]  INFO -- : (0.000231s) INSERT INTO `groups` (`group_name`) VALUES ('Philip Jones Brass Ensemble')
+I, [2017-07-24T10:50:28.138327 #25167]  INFO -- : (0.001578s) COMMIT
+I, [2017-07-24T10:50:28.138659 #25167]  INFO -- : (0.000055s) BEGIN
+I, [2017-07-24T10:50:28.139117 #25167]  INFO -- : (0.000194s) INSERT INTO `groups` (`group_name`) VALUES ('Canadian Brass')
+I, [2017-07-24T10:50:28.140281 #25167]  INFO -- : (0.001054s) COMMIT
+I, [2017-07-24T10:50:28.140640 #25167]  INFO -- : (0.000140s) SELECT * FROM `groups` WHERE (`group_name` = 'Canadian Brass') LIMIT 1
+I, [2017-07-24T10:50:28.143431 #25167]  INFO -- : (0.000299s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.143502 #25167]  INFO -- : (0.000018s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.143633 #25167]  INFO -- : (0.000089s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.146381 #25167]  INFO -- : (0.002621s) DELETE FROM `groups` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.146559 #25167]  INFO -- : (0.000039s) BEGIN
+I, [2017-07-24T10:50:28.146865 #25167]  INFO -- : (0.000121s) INSERT INTO `groups` (`group_name`) VALUES ('Philip Jones Brass Ensemble')
+I, [2017-07-24T10:50:28.147622 #25167]  INFO -- : (0.000707s) COMMIT
+I, [2017-07-24T10:50:28.151437 #25167]  INFO -- : (0.000133s) BEGIN
+I, [2017-07-24T10:50:28.152238 #25167]  INFO -- : (0.000392s) INSERT INTO `groups` (`group_name`) VALUES ('Canadian Brass')
+I, [2017-07-24T10:50:28.154733 #25167]  INFO -- : (0.002383s) COMMIT
+I, [2017-07-24T10:50:28.154905 #25167]  INFO -- : (0.000037s) BEGIN
+I, [2017-07-24T10:50:28.155194 #25167]  INFO -- : (0.000120s) INSERT INTO `groups` (`group_name`) VALUES ('Aerosmith')
+I, [2017-07-24T10:50:28.156014 #25167]  INFO -- : (0.000739s) COMMIT
+I, [2017-07-24T10:50:28.156291 #25167]  INFO -- : (0.000149s) SELECT * FROM `groups` ORDER BY `group_name`
+I, [2017-07-24T10:50:28.161090 #25167]  INFO -- : (0.000687s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.161387 #25167]  INFO -- : (0.000056s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.161702 #25167]  INFO -- : (0.000175s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.169272 #25167]  INFO -- : (0.007223s) DELETE FROM `labels` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.170256 #25167]  INFO -- : (0.000370s) SELECT count(*) AS 'count' FROM `labels` LIMIT 1
+I, [2017-07-24T10:50:28.172540 #25167]  INFO -- : (0.000356s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.172726 #25167]  INFO -- : (0.000042s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.172891 #25167]  INFO -- : (0.000082s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.173152 #25167]  INFO -- : (0.000101s) DELETE FROM `labels` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.173310 #25167]  INFO -- : (0.000053s) BEGIN
+I, [2017-07-24T10:50:28.173581 #25167]  INFO -- : (0.000107s) INSERT INTO `labels` (`label_name`) VALUES ('London')
+I, [2017-07-24T10:50:28.176610 #25167]  INFO -- : (0.002963s) COMMIT
+I, [2017-07-24T10:50:28.177064 #25167]  INFO -- : (0.000111s) SELECT count(*) AS 'count' FROM `labels` LIMIT 1
+I, [2017-07-24T10:50:28.180230 #25167]  INFO -- : (0.000294s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.180302 #25167]  INFO -- : (0.000022s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.180417 #25167]  INFO -- : (0.000069s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.196425 #25167]  INFO -- : (0.015752s) DELETE FROM `labels` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.197181 #25167]  INFO -- : (0.000155s) BEGIN
+I, [2017-07-24T10:50:28.198198 #25167]  INFO -- : (0.000312s) INSERT INTO `labels` (`label_name`) VALUES ('London')
+I, [2017-07-24T10:50:28.202737 #25167]  INFO -- : (0.004349s) COMMIT
+I, [2017-07-24T10:50:28.203496 #25167]  INFO -- : (0.000212s) SELECT * FROM `labels` ORDER BY `label_name` LIMIT 1
+I, [2017-07-24T10:50:28.205213 #25167]  INFO -- : (0.000428s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.205313 #25167]  INFO -- : (0.000032s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.205500 #25167]  INFO -- : (0.000116s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.208855 #25167]  INFO -- : (0.003171s) DELETE FROM `labels` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.209054 #25167]  INFO -- : (0.000045s) BEGIN
+I, [2017-07-24T10:50:28.209440 #25167]  INFO -- : (0.000151s) INSERT INTO `labels` (`label_name`) VALUES ('EMI')
+I, [2017-07-24T10:50:28.215008 #25167]  INFO -- : (0.005451s) COMMIT
+I, [2017-07-24T10:50:28.215533 #25167]  INFO -- : (0.000071s) BEGIN
+I, [2017-07-24T10:50:28.216277 #25167]  INFO -- : (0.000259s) INSERT INTO `labels` (`label_name`) VALUES ('Nonesuch')
+I, [2017-07-24T10:50:28.221816 #25167]  INFO -- : (0.005408s) COMMIT
+I, [2017-07-24T10:50:28.222332 #25167]  INFO -- : (0.000127s) SELECT count(*) AS 'count' FROM `labels` LIMIT 1
+I, [2017-07-24T10:50:28.224741 #25167]  INFO -- : (0.000331s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.224807 #25167]  INFO -- : (0.000020s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.224911 #25167]  INFO -- : (0.000061s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.228673 #25167]  INFO -- : (0.003573s) DELETE FROM `labels` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.229337 #25167]  INFO -- : (0.000124s) BEGIN
+I, [2017-07-24T10:50:28.230314 #25167]  INFO -- : (0.000333s) INSERT INTO `labels` (`label_name`) VALUES ('EMI')
+I, [2017-07-24T10:50:28.241202 #25167]  INFO -- : (0.010747s) COMMIT
+I, [2017-07-24T10:50:28.241492 #25167]  INFO -- : (0.000060s) BEGIN
+I, [2017-07-24T10:50:28.241945 #25167]  INFO -- : (0.000202s) INSERT INTO `labels` (`label_name`) VALUES ('Nonesuch')
+I, [2017-07-24T10:50:28.244228 #25167]  INFO -- : (0.002184s) COMMIT
+I, [2017-07-24T10:50:28.244815 #25167]  INFO -- : (0.000228s) SELECT * FROM `labels` WHERE (`label_name` = 'Nonesuch') LIMIT 1
+I, [2017-07-24T10:50:28.248352 #25167]  INFO -- : (0.000454s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.248438 #25167]  INFO -- : (0.000027s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.248583 #25167]  INFO -- : (0.000077s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.256479 #25167]  INFO -- : (0.007713s) DELETE FROM `labels` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.256747 #25167]  INFO -- : (0.000056s) BEGIN
+I, [2017-07-24T10:50:28.257163 #25167]  INFO -- : (0.000165s) INSERT INTO `labels` (`label_name`) VALUES ('London')
+I, [2017-07-24T10:50:28.258188 #25167]  INFO -- : (0.000940s) COMMIT
+I, [2017-07-24T10:50:28.258370 #25167]  INFO -- : (0.000038s) BEGIN
+I, [2017-07-24T10:50:28.258687 #25167]  INFO -- : (0.000132s) INSERT INTO `labels` (`label_name`) VALUES ('EMI')
+I, [2017-07-24T10:50:28.261000 #25167]  INFO -- : (0.002216s) COMMIT
+I, [2017-07-24T10:50:28.261193 #25167]  INFO -- : (0.000042s) BEGIN
+I, [2017-07-24T10:50:28.261518 #25167]  INFO -- : (0.000148s) INSERT INTO `labels` (`label_name`) VALUES ('Nonesuch')
+I, [2017-07-24T10:50:28.262830 #25167]  INFO -- : (0.001229s) COMMIT
+I, [2017-07-24T10:50:28.263112 #25167]  INFO -- : (0.000077s) BEGIN
+I, [2017-07-24T10:50:28.267248 #25167]  INFO -- : (0.000277s) INSERT INTO `labels` (`label_name`) VALUES ('Apple')
+I, [2017-07-24T10:50:28.268321 #25167]  INFO -- : (0.000974s) COMMIT
+I, [2017-07-24T10:50:28.268660 #25167]  INFO -- : (0.000150s) SELECT * FROM `labels` ORDER BY `label_name`
+I, [2017-07-24T10:50:28.270633 #25167]  INFO -- : (0.000575s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.270938 #25167]  INFO -- : (0.000147s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.273366 #25167]  INFO -- : (0.002194s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.275886 #25167]  INFO -- : (0.002019s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.278954 #25167]  INFO -- : (0.002817s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.280036 #25167]  INFO -- : (0.000852s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.280182 #25167]  INFO -- : (0.000037s) BEGIN
+I, [2017-07-24T10:50:28.280471 #25167]  INFO -- : (0.000115s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.281270 #25167]  INFO -- : (0.000752s) COMMIT
+I, [2017-07-24T10:50:28.281387 #25167]  INFO -- : (0.000035s) BEGIN
+I, [2017-07-24T10:50:28.281594 #25167]  INFO -- : (0.000103s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach')
+I, [2017-07-24T10:50:28.282370 #25167]  INFO -- : (0.000714s) COMMIT
+I, [2017-07-24T10:50:28.282469 #25167]  INFO -- : (0.000021s) BEGIN
+I, [2017-07-24T10:50:28.282669 #25167]  INFO -- : (0.000089s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Byrd', 'William', '')
+I, [2017-07-24T10:50:28.283767 #25167]  INFO -- : (0.001054s) COMMIT
+I, [2017-07-24T10:50:28.283871 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:28.284093 #25167]  INFO -- : (0.000109s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:28.307152 #25167]  INFO -- : (0.022966s) COMMIT
+I, [2017-07-24T10:50:28.307993 #25167]  INFO -- : (0.000315s) BEGIN
+I, [2017-07-24T10:50:28.309087 #25167]  INFO -- : (0.000404s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Prince', '', 'Prince')
+I, [2017-07-24T10:50:28.310488 #25167]  INFO -- : (0.001233s) COMMIT
+I, [2017-07-24T10:50:28.310698 #25167]  INFO -- : (0.000041s) BEGIN
+I, [2017-07-24T10:50:28.311051 #25167]  INFO -- : (0.000153s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Wagner', 'Richard', '')
+I, [2017-07-24T10:50:28.313948 #25167]  INFO -- : (0.002810s) COMMIT
+I, [2017-07-24T10:50:28.314158 #25167]  INFO -- : (0.000041s) BEGIN
+I, [2017-07-24T10:50:28.314506 #25167]  INFO -- : (0.000150s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:28.315395 #25167]  INFO -- : (0.000807s) COMMIT
+I, [2017-07-24T10:50:28.315528 #25167]  INFO -- : (0.000038s) BEGIN
+I, [2017-07-24T10:50:28.315778 #25167]  INFO -- : (0.000106s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:28.316511 #25167]  INFO -- : (0.000688s) COMMIT
+I, [2017-07-24T10:50:28.316596 #25167]  INFO -- : (0.000020s) BEGIN
+I, [2017-07-24T10:50:28.316778 #25167]  INFO -- : (0.000088s) INSERT INTO `roles` (`role_name`) VALUES ('Performer')
+I, [2017-07-24T10:50:28.319715 #25167]  INFO -- : (0.002855s) COMMIT
+I, [2017-07-24T10:50:28.319991 #25167]  INFO -- : (0.000058s) BEGIN
+I, [2017-07-24T10:50:28.320356 #25167]  INFO -- : (0.000129s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:28.321183 #25167]  INFO -- : (0.000773s) COMMIT
+I, [2017-07-24T10:50:28.321330 #25167]  INFO -- : (0.000049s) BEGIN
+I, [2017-07-24T10:50:28.321590 #25167]  INFO -- : (0.000123s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:28.344094 #25167]  INFO -- : (0.022402s) COMMIT
+I, [2017-07-24T10:50:28.344347 #25167]  INFO -- : (0.000055s) BEGIN
+I, [2017-07-24T10:50:28.344798 #25167]  INFO -- : (0.000209s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:28.345865 #25167]  INFO -- : (0.000977s) COMMIT
+I, [2017-07-24T10:50:28.346351 #25167]  INFO -- : (0.000175s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.346629 #25167]  INFO -- : (0.000103s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.346912 #25167]  INFO -- : (0.000144s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.347003 #25167]  INFO -- : (0.000032s) BEGIN
+I, [2017-07-24T10:50:28.347262 #25167]  INFO -- : (0.000117s) INSERT INTO `people_roles_pieces` (`person_id`, `role_id`, `piece_id`) VALUES (7, 8, 10)
+I, [2017-07-24T10:50:28.348333 #25167]  INFO -- : (0.001021s) COMMIT
+I, [2017-07-24T10:50:28.348657 #25167]  INFO -- : (0.000112s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.348893 #25167]  INFO -- : (0.000116s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.349122 #25167]  INFO -- : (0.000096s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Ach, mein hertzliches Jesulein')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.349223 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:28.349411 #25167]  INFO -- : (0.000096s) INSERT INTO `people_roles_pieces` (`person_id`, `role_id`, `piece_id`) VALUES (7, 8, 11)
+I, [2017-07-24T10:50:28.352577 #25167]  INFO -- : (0.003087s) COMMIT
+I, [2017-07-24T10:50:28.354064 #25167]  INFO -- : (0.000326s) SELECT * FROM `people` WHERE ((`surname` = 'Neuman') AND (`given_name` = 'Alfred E.')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.362389 #25167]  INFO -- : (0.000323s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.362472 #25167]  INFO -- : (0.000022s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.362590 #25167]  INFO -- : (0.000070s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.367496 #25167]  INFO -- : (0.004752s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.370122 #25167]  INFO -- : (0.002328s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.371253 #25167]  INFO -- : (0.000886s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.371370 #25167]  INFO -- : (0.000032s) BEGIN
+I, [2017-07-24T10:50:28.371629 #25167]  INFO -- : (0.000116s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.373325 #25167]  INFO -- : (0.001628s) COMMIT
+I, [2017-07-24T10:50:28.373569 #25167]  INFO -- : (0.000092s) BEGIN
+I, [2017-07-24T10:50:28.374018 #25167]  INFO -- : (0.000183s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach')
+I, [2017-07-24T10:50:28.380603 #25167]  INFO -- : (0.006462s) COMMIT
+I, [2017-07-24T10:50:28.381069 #25167]  INFO -- : (0.000123s) BEGIN
+I, [2017-07-24T10:50:28.382109 #25167]  INFO -- : (0.000478s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Byrd', 'William', '')
+I, [2017-07-24T10:50:28.384192 #25167]  INFO -- : (0.001855s) COMMIT
+I, [2017-07-24T10:50:28.384418 #25167]  INFO -- : (0.000052s) BEGIN
+I, [2017-07-24T10:50:28.384840 #25167]  INFO -- : (0.000190s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:28.388039 #25167]  INFO -- : (0.003107s) COMMIT
+I, [2017-07-24T10:50:28.388195 #25167]  INFO -- : (0.000035s) BEGIN
+I, [2017-07-24T10:50:28.388534 #25167]  INFO -- : (0.000184s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Prince', '', 'Prince')
+I, [2017-07-24T10:50:28.389448 #25167]  INFO -- : (0.000847s) COMMIT
+I, [2017-07-24T10:50:28.389573 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:28.389818 #25167]  INFO -- : (0.000102s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Wagner', 'Richard', '')
+I, [2017-07-24T10:50:28.390557 #25167]  INFO -- : (0.000690s) COMMIT
+I, [2017-07-24T10:50:28.390678 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:28.390921 #25167]  INFO -- : (0.000104s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:28.394471 #25167]  INFO -- : (0.003479s) COMMIT
+I, [2017-07-24T10:50:28.394638 #25167]  INFO -- : (0.000039s) BEGIN
+I, [2017-07-24T10:50:28.394928 #25167]  INFO -- : (0.000136s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:28.404577 #25167]  INFO -- : (0.009559s) COMMIT
+I, [2017-07-24T10:50:28.404840 #25167]  INFO -- : (0.000061s) BEGIN
+I, [2017-07-24T10:50:28.405373 #25167]  INFO -- : (0.000221s) INSERT INTO `roles` (`role_name`) VALUES ('Performer')
+I, [2017-07-24T10:50:28.406701 #25167]  INFO -- : (0.001212s) COMMIT
+I, [2017-07-24T10:50:28.406874 #25167]  INFO -- : (0.000039s) BEGIN
+I, [2017-07-24T10:50:28.407245 #25167]  INFO -- : (0.000193s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:28.408394 #25167]  INFO -- : (0.001073s) COMMIT
+I, [2017-07-24T10:50:28.408541 #25167]  INFO -- : (0.000032s) BEGIN
+I, [2017-07-24T10:50:28.408981 #25167]  INFO -- : (0.000184s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:28.410046 #25167]  INFO -- : (0.000995s) COMMIT
+I, [2017-07-24T10:50:28.410168 #25167]  INFO -- : (0.000028s) BEGIN
+I, [2017-07-24T10:50:28.410481 #25167]  INFO -- : (0.000129s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:28.417587 #25167]  INFO -- : (0.007022s) COMMIT
+I, [2017-07-24T10:50:28.418313 #25167]  INFO -- : (0.000256s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.418832 #25167]  INFO -- : (0.000238s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.419263 #25167]  INFO -- : (0.000177s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.419407 #25167]  INFO -- : (0.000041s) BEGIN
+I, [2017-07-24T10:50:28.419734 #25167]  INFO -- : (0.000146s) INSERT INTO `people_roles_pieces` (`person_id`, `role_id`, `piece_id`) VALUES (13, 12, 12)
+I, [2017-07-24T10:50:28.423719 #25167]  INFO -- : (0.003855s) COMMIT
+I, [2017-07-24T10:50:28.424288 #25167]  INFO -- : (0.000218s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.424532 #25167]  INFO -- : (0.000102s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.424801 #25167]  INFO -- : (0.000118s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Ach, mein hertzliches Jesulein')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.424925 #25167]  INFO -- : (0.000029s) BEGIN
+I, [2017-07-24T10:50:28.425148 #25167]  INFO -- : (0.000108s) INSERT INTO `people_roles_pieces` (`person_id`, `role_id`, `piece_id`) VALUES (13, 12, 13)
+I, [2017-07-24T10:50:28.427347 #25167]  INFO -- : (0.002112s) COMMIT
+I, [2017-07-24T10:50:28.427796 #25167]  INFO -- : (0.000139s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.428010 #25167]  INFO -- : (0.000077s) SELECT * FROM `roles` WHERE (`role_name` = 'Necromancer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.429634 #25167]  INFO -- : (0.000314s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.429688 #25167]  INFO -- : (0.000018s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.429782 #25167]  INFO -- : (0.000055s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.432973 #25167]  INFO -- : (0.003072s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.435934 #25167]  INFO -- : (0.002691s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.437214 #25167]  INFO -- : (0.000998s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.437328 #25167]  INFO -- : (0.000031s) BEGIN
+I, [2017-07-24T10:50:28.437569 #25167]  INFO -- : (0.000102s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.438319 #25167]  INFO -- : (0.000700s) COMMIT
+I, [2017-07-24T10:50:28.438417 #25167]  INFO -- : (0.000023s) BEGIN
+I, [2017-07-24T10:50:28.438616 #25167]  INFO -- : (0.000109s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach')
+I, [2017-07-24T10:50:28.445002 #25167]  INFO -- : (0.006310s) COMMIT
+I, [2017-07-24T10:50:28.445270 #25167]  INFO -- : (0.000062s) BEGIN
+I, [2017-07-24T10:50:28.445719 #25167]  INFO -- : (0.000214s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Byrd', 'William', '')
+I, [2017-07-24T10:50:28.446887 #25167]  INFO -- : (0.001077s) COMMIT
+I, [2017-07-24T10:50:28.447007 #25167]  INFO -- : (0.000028s) BEGIN
+I, [2017-07-24T10:50:28.447778 #25167]  INFO -- : (0.000631s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:28.474826 #25167]  INFO -- : (0.026946s) COMMIT
+I, [2017-07-24T10:50:28.475099 #25167]  INFO -- : (0.000062s) BEGIN
+I, [2017-07-24T10:50:28.475593 #25167]  INFO -- : (0.000219s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Prince', '', 'Prince')
+I, [2017-07-24T10:50:28.476611 #25167]  INFO -- : (0.000910s) COMMIT
+I, [2017-07-24T10:50:28.476754 #25167]  INFO -- : (0.000031s) BEGIN
+I, [2017-07-24T10:50:28.477030 #25167]  INFO -- : (0.000128s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Wagner', 'Richard', '')
+I, [2017-07-24T10:50:28.477835 #25167]  INFO -- : (0.000753s) COMMIT
+I, [2017-07-24T10:50:28.477932 #25167]  INFO -- : (0.000021s) BEGIN
+I, [2017-07-24T10:50:28.478186 #25167]  INFO -- : (0.000104s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:28.478934 #25167]  INFO -- : (0.000705s) COMMIT
+I, [2017-07-24T10:50:28.479031 #25167]  INFO -- : (0.000030s) BEGIN
+I, [2017-07-24T10:50:28.479253 #25167]  INFO -- : (0.000124s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:28.480043 #25167]  INFO -- : (0.000736s) COMMIT
+I, [2017-07-24T10:50:28.480129 #25167]  INFO -- : (0.000020s) BEGIN
+I, [2017-07-24T10:50:28.480300 #25167]  INFO -- : (0.000088s) INSERT INTO `roles` (`role_name`) VALUES ('Performer')
+I, [2017-07-24T10:50:28.481027 #25167]  INFO -- : (0.000688s) COMMIT
+I, [2017-07-24T10:50:28.481113 #25167]  INFO -- : (0.000020s) BEGIN
+I, [2017-07-24T10:50:28.481287 #25167]  INFO -- : (0.000094s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:28.482707 #25167]  INFO -- : (0.001372s) COMMIT
+I, [2017-07-24T10:50:28.482834 #25167]  INFO -- : (0.000029s) BEGIN
+I, [2017-07-24T10:50:28.483147 #25167]  INFO -- : (0.000131s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:28.489763 #25167]  INFO -- : (0.001988s) COMMIT
+I, [2017-07-24T10:50:28.490188 #25167]  INFO -- : (0.000110s) BEGIN
+I, [2017-07-24T10:50:28.490843 #25167]  INFO -- : (0.000306s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:28.492561 #25167]  INFO -- : (0.001618s) COMMIT
+I, [2017-07-24T10:50:28.493037 #25167]  INFO -- : (0.000188s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.493337 #25167]  INFO -- : (0.000119s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.493641 #25167]  INFO -- : (0.000111s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.493728 #25167]  INFO -- : (0.000022s) BEGIN
+I, [2017-07-24T10:50:28.493962 #25167]  INFO -- : (0.000105s) INSERT INTO `people_roles_pieces` (`person_id`, `role_id`, `piece_id`) VALUES (19, 16, 14)
+I, [2017-07-24T10:50:28.496066 #25167]  INFO -- : (0.002048s) COMMIT
+I, [2017-07-24T10:50:28.496504 #25167]  INFO -- : (0.000186s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.496766 #25167]  INFO -- : (0.000103s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.497040 #25167]  INFO -- : (0.000112s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Ach, mein hertzliches Jesulein')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.497137 #25167]  INFO -- : (0.000025s) BEGIN
+I, [2017-07-24T10:50:28.497387 #25167]  INFO -- : (0.000118s) INSERT INTO `people_roles_pieces` (`person_id`, `role_id`, `piece_id`) VALUES (19, 16, 15)
+I, [2017-07-24T10:50:28.499958 #25167]  INFO -- : (0.002516s) COMMIT
+I, [2017-07-24T10:50:28.500388 #25167]  INFO -- : (0.000140s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.500638 #25167]  INFO -- : (0.000098s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.500904 #25167]  INFO -- : (0.000091s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Das ist nicht mein schöner Untertitel')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.504690 #25167]  INFO -- : (0.000333s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.504763 #25167]  INFO -- : (0.000023s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.504876 #25167]  INFO -- : (0.000066s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.515606 #25167]  INFO -- : (0.010587s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.516803 #25167]  INFO -- : (0.000918s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.517886 #25167]  INFO -- : (0.000871s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.518032 #25167]  INFO -- : (0.000035s) BEGIN
+I, [2017-07-24T10:50:28.518355 #25167]  INFO -- : (0.000114s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.519144 #25167]  INFO -- : (0.000715s) COMMIT
+I, [2017-07-24T10:50:28.519289 #25167]  INFO -- : (0.000027s) BEGIN
+I, [2017-07-24T10:50:28.519520 #25167]  INFO -- : (0.000111s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach')
+I, [2017-07-24T10:50:28.520672 #25167]  INFO -- : (0.001100s) COMMIT
+I, [2017-07-24T10:50:28.520822 #25167]  INFO -- : (0.000050s) BEGIN
+I, [2017-07-24T10:50:28.521259 #25167]  INFO -- : (0.000214s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Byrd', 'William', '')
+I, [2017-07-24T10:50:28.524834 #25167]  INFO -- : (0.003466s) COMMIT
+I, [2017-07-24T10:50:28.525112 #25167]  INFO -- : (0.000063s) BEGIN
+I, [2017-07-24T10:50:28.525756 #25167]  INFO -- : (0.000399s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:28.530901 #25167]  INFO -- : (0.004938s) COMMIT
+I, [2017-07-24T10:50:28.532773 #25167]  INFO -- : (0.000057s) BEGIN
+I, [2017-07-24T10:50:28.533330 #25167]  INFO -- : (0.000349s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Prince', '', 'Prince')
+I, [2017-07-24T10:50:28.534451 #25167]  INFO -- : (0.001035s) COMMIT
+I, [2017-07-24T10:50:28.534606 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:28.534867 #25167]  INFO -- : (0.000114s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Wagner', 'Richard', '')
+I, [2017-07-24T10:50:28.536865 #25167]  INFO -- : (0.001897s) COMMIT
+I, [2017-07-24T10:50:28.537200 #25167]  INFO -- : (0.000104s) BEGIN
+I, [2017-07-24T10:50:28.537525 #25167]  INFO -- : (0.000124s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:28.541217 #25167]  INFO -- : (0.003521s) COMMIT
+I, [2017-07-24T10:50:28.541672 #25167]  INFO -- : (0.000118s) BEGIN
+I, [2017-07-24T10:50:28.542257 #25167]  INFO -- : (0.000248s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:28.546578 #25167]  INFO -- : (0.004191s) COMMIT
+I, [2017-07-24T10:50:28.546972 #25167]  INFO -- : (0.000076s) BEGIN
+I, [2017-07-24T10:50:28.547514 #25167]  INFO -- : (0.000231s) INSERT INTO `roles` (`role_name`) VALUES ('Performer')
+I, [2017-07-24T10:50:28.548500 #25167]  INFO -- : (0.000927s) COMMIT
+I, [2017-07-24T10:50:28.548619 #25167]  INFO -- : (0.000030s) BEGIN
+I, [2017-07-24T10:50:28.548861 #25167]  INFO -- : (0.000127s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:28.549780 #25167]  INFO -- : (0.000833s) COMMIT
+I, [2017-07-24T10:50:28.549883 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:28.550120 #25167]  INFO -- : (0.000115s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:28.551846 #25167]  INFO -- : (0.001670s) COMMIT
+I, [2017-07-24T10:50:28.551971 #25167]  INFO -- : (0.000029s) BEGIN
+I, [2017-07-24T10:50:28.552284 #25167]  INFO -- : (0.000194s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:28.553163 #25167]  INFO -- : (0.000821s) COMMIT
+I, [2017-07-24T10:50:28.553922 #25167]  INFO -- : (0.000320s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.554303 #25167]  INFO -- : (0.000119s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.554562 #25167]  INFO -- : (0.000109s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.554659 #25167]  INFO -- : (0.000022s) BEGIN
+I, [2017-07-24T10:50:28.554885 #25167]  INFO -- : (0.000107s) INSERT INTO `people_roles_pieces` (`person_id`, `role_id`, `piece_id`) VALUES (25, 20, 16)
+I, [2017-07-24T10:50:28.562763 #25167]  INFO -- : (0.007803s) COMMIT
+I, [2017-07-24T10:50:28.563485 #25167]  INFO -- : (0.000246s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.563881 #25167]  INFO -- : (0.000141s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.564306 #25167]  INFO -- : (0.000149s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Ach, mein hertzliches Jesulein')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.564439 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:28.564718 #25167]  INFO -- : (0.000136s) INSERT INTO `people_roles_pieces` (`person_id`, `role_id`, `piece_id`) VALUES (25, 20, 17)
+I, [2017-07-24T10:50:28.565909 #25167]  INFO -- : (0.001124s) COMMIT
+I, [2017-07-24T10:50:28.566350 #25167]  INFO -- : (0.000149s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.566655 #25167]  INFO -- : (0.000109s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') LIMIT 1
+I, [2017-07-24T10:50:28.566867 #25167]  INFO -- : (0.000084s) SELECT * FROM `people_roles_pieces` WHERE ((`piece_id` = 16) AND (`role_id` = 20))
+I, [2017-07-24T10:50:28.567074 #25167]  INFO -- : (0.000087s) SELECT * FROM `people` WHERE (`id` = 25)
+I, [2017-07-24T10:50:28.571009 #25167]  INFO -- : (0.000266s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.571095 #25167]  INFO -- : (0.000019s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.572719 #25167]  INFO -- : (0.001572s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.579150 #25167]  INFO -- : (0.006237s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.581270 #25167]  INFO -- : (0.001764s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.582394 #25167]  INFO -- : (0.000915s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.582530 #25167]  INFO -- : (0.000033s) BEGIN
+I, [2017-07-24T10:50:28.582815 #25167]  INFO -- : (0.000112s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.583669 #25167]  INFO -- : (0.000795s) COMMIT
+I, [2017-07-24T10:50:28.583783 #25167]  INFO -- : (0.000025s) BEGIN
+I, [2017-07-24T10:50:28.584086 #25167]  INFO -- : (0.000147s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach')
+I, [2017-07-24T10:50:28.585092 #25167]  INFO -- : (0.000943s) COMMIT
+I, [2017-07-24T10:50:28.585213 #25167]  INFO -- : (0.000028s) BEGIN
+I, [2017-07-24T10:50:28.585457 #25167]  INFO -- : (0.000119s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Byrd', 'William', '')
+I, [2017-07-24T10:50:28.587812 #25167]  INFO -- : (0.002213s) COMMIT
+I, [2017-07-24T10:50:28.588356 #25167]  INFO -- : (0.000160s) BEGIN
+I, [2017-07-24T10:50:28.589004 #25167]  INFO -- : (0.000306s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:28.592913 #25167]  INFO -- : (0.003770s) COMMIT
+I, [2017-07-24T10:50:28.593123 #25167]  INFO -- : (0.000044s) BEGIN
+I, [2017-07-24T10:50:28.593476 #25167]  INFO -- : (0.000144s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Prince', '', 'Prince')
+I, [2017-07-24T10:50:28.595854 #25167]  INFO -- : (0.002303s) COMMIT
+I, [2017-07-24T10:50:28.598689 #25167]  INFO -- : (0.000090s) BEGIN
+I, [2017-07-24T10:50:28.600894 #25167]  INFO -- : (0.001779s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Wagner', 'Richard', '')
+I, [2017-07-24T10:50:28.602241 #25167]  INFO -- : (0.001245s) COMMIT
+I, [2017-07-24T10:50:28.602423 #25167]  INFO -- : (0.000038s) BEGIN
+I, [2017-07-24T10:50:28.602988 #25167]  INFO -- : (0.000304s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:28.604773 #25167]  INFO -- : (0.001687s) COMMIT
+I, [2017-07-24T10:50:28.604934 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:28.605282 #25167]  INFO -- : (0.000131s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:28.607158 #25167]  INFO -- : (0.001689s) COMMIT
+I, [2017-07-24T10:50:28.611705 #25167]  INFO -- : (0.000143s) BEGIN
+I, [2017-07-24T10:50:28.612465 #25167]  INFO -- : (0.000412s) INSERT INTO `roles` (`role_name`) VALUES ('Performer')
+I, [2017-07-24T10:50:28.620696 #25167]  INFO -- : (0.008104s) COMMIT
+I, [2017-07-24T10:50:28.620902 #25167]  INFO -- : (0.000048s) BEGIN
+I, [2017-07-24T10:50:28.621227 #25167]  INFO -- : (0.000148s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:28.622183 #25167]  INFO -- : (0.000881s) COMMIT
+I, [2017-07-24T10:50:28.622337 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:28.622691 #25167]  INFO -- : (0.000145s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:28.623583 #25167]  INFO -- : (0.000823s) COMMIT
+I, [2017-07-24T10:50:28.623711 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:28.623937 #25167]  INFO -- : (0.000106s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:28.624845 #25167]  INFO -- : (0.000860s) COMMIT
+I, [2017-07-24T10:50:28.625241 #25167]  INFO -- : (0.000168s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.625486 #25167]  INFO -- : (0.000095s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.625740 #25167]  INFO -- : (0.000099s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.625820 #25167]  INFO -- : (0.000021s) BEGIN
+I, [2017-07-24T10:50:28.626028 #25167]  INFO -- : (0.000090s) INSERT INTO `people_roles_pieces` (`person_id`, `role_id`, `piece_id`) VALUES (31, 24, 18)
+I, [2017-07-24T10:50:28.627948 #25167]  INFO -- : (0.001868s) COMMIT
+I, [2017-07-24T10:50:28.628382 #25167]  INFO -- : (0.000145s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.631594 #25167]  INFO -- : (0.000181s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.632069 #25167]  INFO -- : (0.000183s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Ach, mein hertzliches Jesulein')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:28.632305 #25167]  INFO -- : (0.000047s) BEGIN
+I, [2017-07-24T10:50:28.632656 #25167]  INFO -- : (0.000174s) INSERT INTO `people_roles_pieces` (`person_id`, `role_id`, `piece_id`) VALUES (31, 24, 19)
+I, [2017-07-24T10:50:28.633874 #25167]  INFO -- : (0.001153s) COMMIT
+I, [2017-07-24T10:50:28.634327 #25167]  INFO -- : (0.000162s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.634592 #25167]  INFO -- : (0.000106s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') LIMIT 1
+I, [2017-07-24T10:50:28.634914 #25167]  INFO -- : (0.000119s) SELECT * FROM `people_roles_pieces` WHERE ((`person_id` = 31) AND (`role_id` = 24))
+I, [2017-07-24T10:50:28.635123 #25167]  INFO -- : (0.000084s) SELECT * FROM `pieces` WHERE (`id` = 18)
+I, [2017-07-24T10:50:28.639332 #25167]  INFO -- : (0.000293s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.639398 #25167]  INFO -- : (0.000021s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.639498 #25167]  INFO -- : (0.000060s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.646172 #25167]  INFO -- : (0.006536s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.647746 #25167]  INFO -- : (0.001208s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.649611 #25167]  INFO -- : (0.001691s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.649776 #25167]  INFO -- : (0.000042s) BEGIN
+I, [2017-07-24T10:50:28.650084 #25167]  INFO -- : (0.000134s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.650868 #25167]  INFO -- : (0.000733s) COMMIT
+I, [2017-07-24T10:50:28.650968 #25167]  INFO -- : (0.000023s) BEGIN
+I, [2017-07-24T10:50:28.651224 #25167]  INFO -- : (0.000158s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Byrd', 'William', '')
+I, [2017-07-24T10:50:28.658573 #25167]  INFO -- : (0.007180s) COMMIT
+I, [2017-07-24T10:50:28.659472 #25167]  INFO -- : (0.000152s) BEGIN
+I, [2017-07-24T10:50:28.660764 #25167]  INFO -- : (0.000346s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Clarke', 'Jeremiah', '')
+I, [2017-07-24T10:50:28.667837 #25167]  INFO -- : (0.006935s) COMMIT
+I, [2017-07-24T10:50:28.668039 #25167]  INFO -- : (0.000045s) BEGIN
+I, [2017-07-24T10:50:28.668406 #25167]  INFO -- : (0.000194s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Howarth', 'Elgar', '')
+I, [2017-07-24T10:50:28.670506 #25167]  INFO -- : (0.002004s) COMMIT
+I, [2017-07-24T10:50:28.670675 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:28.670971 #25167]  INFO -- : (0.000138s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Iveson', 'John', '')
+I, [2017-07-24T10:50:28.671842 #25167]  INFO -- : (0.000810s) COMMIT
+I, [2017-07-24T10:50:28.671966 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:28.672246 #25167]  INFO -- : (0.000144s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:28.684839 #25167]  INFO -- : (0.012511s) COMMIT
+I, [2017-07-24T10:50:28.685085 #25167]  INFO -- : (0.000055s) BEGIN
+I, [2017-07-24T10:50:28.685494 #25167]  INFO -- : (0.000180s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:28.686428 #25167]  INFO -- : (0.000812s) COMMIT
+I, [2017-07-24T10:50:28.686560 #25167]  INFO -- : (0.000028s) BEGIN
+I, [2017-07-24T10:50:28.686849 #25167]  INFO -- : (0.000150s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:28.687782 #25167]  INFO -- : (0.000867s) COMMIT
+I, [2017-07-24T10:50:28.687902 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:28.688141 #25167]  INFO -- : (0.000114s) INSERT INTO `roles` (`role_name`) VALUES ('Performer')
+I, [2017-07-24T10:50:28.689076 #25167]  INFO -- : (0.000872s) COMMIT
+I, [2017-07-24T10:50:28.689526 #25167]  INFO -- : (0.000167s) BEGIN
+I, [2017-07-24T10:50:28.690039 #25167]  INFO -- : (0.000181s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:28.692757 #25167]  INFO -- : (0.002616s) COMMIT
+I, [2017-07-24T10:50:28.693030 #25167]  INFO -- : (0.000044s) BEGIN
+I, [2017-07-24T10:50:28.693473 #25167]  INFO -- : (0.000206s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:28.695971 #25167]  INFO -- : (0.002419s) COMMIT
+I, [2017-07-24T10:50:28.696133 #25167]  INFO -- : (0.000035s) BEGIN
+I, [2017-07-24T10:50:28.696436 #25167]  INFO -- : (0.000145s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 5.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:28.697312 #25167]  INFO -- : (0.000815s) COMMIT
+I, [2017-07-24T10:50:28.697477 #25167]  INFO -- : (0.000029s) BEGIN
+I, [2017-07-24T10:50:28.697738 #25167]  INFO -- : (0.000119s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 6.wav', 243, '1984-01-01', '')
+I, [2017-07-24T10:50:28.699840 #25167]  INFO -- : (0.002042s) COMMIT
+I, [2017-07-24T10:50:28.700327 #25167]  INFO -- : (0.000173s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.700614 #25167]  INFO -- : (0.000105s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.700948 #25167]  INFO -- : (0.000183s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 2.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:28.701050 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:28.701285 #25167]  INFO -- : (0.000102s) INSERT INTO `people_roles_recordings` (`person_id`, `role_id`, `recording_id`) VALUES (37, 28, 28)
+I, [2017-07-24T10:50:28.704244 #25167]  INFO -- : (0.002892s) COMMIT
+I, [2017-07-24T10:50:28.704737 #25167]  INFO -- : (0.000160s) SELECT * FROM `people_roles_recordings` WHERE ((`person_id` = 37) AND (`role_id` = 28) AND (`recording_id` = 28))
+I, [2017-07-24T10:50:28.707502 #25167]  INFO -- : (0.000388s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.707584 #25167]  INFO -- : (0.000023s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.707710 #25167]  INFO -- : (0.000062s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.725129 #25167]  INFO -- : (0.017239s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.730301 #25167]  INFO -- : (0.004879s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.731832 #25167]  INFO -- : (0.001166s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.732433 #25167]  INFO -- : (0.000080s) BEGIN
+I, [2017-07-24T10:50:28.733125 #25167]  INFO -- : (0.000294s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.739484 #25167]  INFO -- : (0.006175s) COMMIT
+I, [2017-07-24T10:50:28.739709 #25167]  INFO -- : (0.000050s) BEGIN
+I, [2017-07-24T10:50:28.740105 #25167]  INFO -- : (0.000162s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Byrd', 'William', '')
+I, [2017-07-24T10:50:28.741019 #25167]  INFO -- : (0.000839s) COMMIT
+I, [2017-07-24T10:50:28.741195 #25167]  INFO -- : (0.000032s) BEGIN
+I, [2017-07-24T10:50:28.741447 #25167]  INFO -- : (0.000109s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Clarke', 'Jeremiah', '')
+I, [2017-07-24T10:50:28.743356 #25167]  INFO -- : (0.001838s) COMMIT
+I, [2017-07-24T10:50:28.743540 #25167]  INFO -- : (0.000041s) BEGIN
+I, [2017-07-24T10:50:28.743913 #25167]  INFO -- : (0.000171s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Howarth', 'Elgar', '')
+I, [2017-07-24T10:50:28.749931 #25167]  INFO -- : (0.005895s) COMMIT
+I, [2017-07-24T10:50:28.750397 #25167]  INFO -- : (0.000143s) BEGIN
+I, [2017-07-24T10:50:28.751511 #25167]  INFO -- : (0.000477s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Iveson', 'John', '')
+I, [2017-07-24T10:50:28.753279 #25167]  INFO -- : (0.001547s) COMMIT
+I, [2017-07-24T10:50:28.753646 #25167]  INFO -- : (0.000116s) BEGIN
+I, [2017-07-24T10:50:28.754341 #25167]  INFO -- : (0.000240s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:28.757266 #25167]  INFO -- : (0.002839s) COMMIT
+I, [2017-07-24T10:50:28.757427 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:28.757695 #25167]  INFO -- : (0.000116s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:28.759741 #25167]  INFO -- : (0.001991s) COMMIT
+I, [2017-07-24T10:50:28.759881 #25167]  INFO -- : (0.000031s) BEGIN
+I, [2017-07-24T10:50:28.760142 #25167]  INFO -- : (0.000130s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:28.760962 #25167]  INFO -- : (0.000764s) COMMIT
+I, [2017-07-24T10:50:28.761088 #25167]  INFO -- : (0.000027s) BEGIN
+I, [2017-07-24T10:50:28.761323 #25167]  INFO -- : (0.000109s) INSERT INTO `roles` (`role_name`) VALUES ('Performer')
+I, [2017-07-24T10:50:28.763836 #25167]  INFO -- : (0.002457s) COMMIT
+I, [2017-07-24T10:50:28.763961 #25167]  INFO -- : (0.000029s) BEGIN
+I, [2017-07-24T10:50:28.764276 #25167]  INFO -- : (0.000142s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:28.765208 #25167]  INFO -- : (0.000869s) COMMIT
+I, [2017-07-24T10:50:28.765343 #25167]  INFO -- : (0.000030s) BEGIN
+I, [2017-07-24T10:50:28.765655 #25167]  INFO -- : (0.000134s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:28.766509 #25167]  INFO -- : (0.000800s) COMMIT
+I, [2017-07-24T10:50:28.766619 #25167]  INFO -- : (0.000025s) BEGIN
+I, [2017-07-24T10:50:28.766868 #25167]  INFO -- : (0.000118s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 5.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:28.768953 #25167]  INFO -- : (0.002028s) COMMIT
+I, [2017-07-24T10:50:28.769124 #25167]  INFO -- : (0.000033s) BEGIN
+I, [2017-07-24T10:50:28.769458 #25167]  INFO -- : (0.000160s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 6.wav', 243, '1984-01-01', '')
+I, [2017-07-24T10:50:28.770327 #25167]  INFO -- : (0.000801s) COMMIT
+I, [2017-07-24T10:50:28.770723 #25167]  INFO -- : (0.000122s) SELECT * FROM `people` WHERE ((`surname` = 'Neuman') AND (`given_name` = 'Alfred E.')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.774134 #25167]  INFO -- : (0.000284s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.774200 #25167]  INFO -- : (0.000019s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.774309 #25167]  INFO -- : (0.000066s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.777253 #25167]  INFO -- : (0.002804s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.778635 #25167]  INFO -- : (0.001067s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.781006 #25167]  INFO -- : (0.002106s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.781211 #25167]  INFO -- : (0.000052s) BEGIN
+I, [2017-07-24T10:50:28.782482 #25167]  INFO -- : (0.001026s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.805642 #25167]  INFO -- : (0.022888s) COMMIT
+I, [2017-07-24T10:50:28.806228 #25167]  INFO -- : (0.000090s) BEGIN
+I, [2017-07-24T10:50:28.807013 #25167]  INFO -- : (0.000432s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Byrd', 'William', '')
+I, [2017-07-24T10:50:28.814782 #25167]  INFO -- : (0.001273s) COMMIT
+I, [2017-07-24T10:50:28.814989 #25167]  INFO -- : (0.000036s) BEGIN
+I, [2017-07-24T10:50:28.815425 #25167]  INFO -- : (0.000193s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Clarke', 'Jeremiah', '')
+I, [2017-07-24T10:50:28.816516 #25167]  INFO -- : (0.001005s) COMMIT
+I, [2017-07-24T10:50:28.816664 #25167]  INFO -- : (0.000030s) BEGIN
+I, [2017-07-24T10:50:28.817036 #25167]  INFO -- : (0.000157s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Howarth', 'Elgar', '')
+I, [2017-07-24T10:50:28.818007 #25167]  INFO -- : (0.000902s) COMMIT
+I, [2017-07-24T10:50:28.818159 #25167]  INFO -- : (0.000039s) BEGIN
+I, [2017-07-24T10:50:28.818425 #25167]  INFO -- : (0.000118s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Iveson', 'John', '')
+I, [2017-07-24T10:50:28.819313 #25167]  INFO -- : (0.000832s) COMMIT
+I, [2017-07-24T10:50:28.819428 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:28.819665 #25167]  INFO -- : (0.000111s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:28.820675 #25167]  INFO -- : (0.000951s) COMMIT
+I, [2017-07-24T10:50:28.820865 #25167]  INFO -- : (0.000057s) BEGIN
+I, [2017-07-24T10:50:28.821131 #25167]  INFO -- : (0.000120s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:28.822691 #25167]  INFO -- : (0.001507s) COMMIT
+I, [2017-07-24T10:50:28.822819 #25167]  INFO -- : (0.000027s) BEGIN
+I, [2017-07-24T10:50:28.823144 #25167]  INFO -- : (0.000138s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:28.828418 #25167]  INFO -- : (0.002861s) COMMIT
+I, [2017-07-24T10:50:28.828736 #25167]  INFO -- : (0.000053s) BEGIN
+I, [2017-07-24T10:50:28.829096 #25167]  INFO -- : (0.000172s) INSERT INTO `roles` (`role_name`) VALUES ('Performer')
+I, [2017-07-24T10:50:28.830582 #25167]  INFO -- : (0.001405s) COMMIT
+I, [2017-07-24T10:50:28.830804 #25167]  INFO -- : (0.000037s) BEGIN
+I, [2017-07-24T10:50:28.832652 #25167]  INFO -- : (0.001604s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:28.833633 #25167]  INFO -- : (0.000891s) COMMIT
+I, [2017-07-24T10:50:28.833767 #25167]  INFO -- : (0.000029s) BEGIN
+I, [2017-07-24T10:50:28.834085 #25167]  INFO -- : (0.000139s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:28.835931 #25167]  INFO -- : (0.001788s) COMMIT
+I, [2017-07-24T10:50:28.836071 #25167]  INFO -- : (0.000032s) BEGIN
+I, [2017-07-24T10:50:28.836392 #25167]  INFO -- : (0.000140s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 5.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:28.839074 #25167]  INFO -- : (0.002609s) COMMIT
+I, [2017-07-24T10:50:28.839250 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:28.839520 #25167]  INFO -- : (0.000128s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 6.wav', 243, '1984-01-01', '')
+I, [2017-07-24T10:50:28.840328 #25167]  INFO -- : (0.000763s) COMMIT
+I, [2017-07-24T10:50:28.840705 #25167]  INFO -- : (0.000136s) SELECT * FROM `people` WHERE ((`surname` = 'Jones') AND (`given_name` = 'Philip')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.840964 #25167]  INFO -- : (0.000122s) SELECT * FROM `roles` WHERE (`role_name` = 'Necromancer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.843923 #25167]  INFO -- : (0.000279s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.843987 #25167]  INFO -- : (0.000022s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.844143 #25167]  INFO -- : (0.000069s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.846818 #25167]  INFO -- : (0.002537s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.849592 #25167]  INFO -- : (0.002509s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.850672 #25167]  INFO -- : (0.000859s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.850818 #25167]  INFO -- : (0.000035s) BEGIN
+I, [2017-07-24T10:50:28.851109 #25167]  INFO -- : (0.000114s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.852792 #25167]  INFO -- : (0.001615s) COMMIT
+I, [2017-07-24T10:50:28.852953 #25167]  INFO -- : (0.000037s) BEGIN
+I, [2017-07-24T10:50:28.853272 #25167]  INFO -- : (0.000164s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Byrd', 'William', '')
+I, [2017-07-24T10:50:28.855605 #25167]  INFO -- : (0.002254s) COMMIT
+I, [2017-07-24T10:50:28.855806 #25167]  INFO -- : (0.000073s) BEGIN
+I, [2017-07-24T10:50:28.856104 #25167]  INFO -- : (0.000133s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Clarke', 'Jeremiah', '')
+I, [2017-07-24T10:50:28.878245 #25167]  INFO -- : (0.022052s) COMMIT
+I, [2017-07-24T10:50:28.878494 #25167]  INFO -- : (0.000055s) BEGIN
+I, [2017-07-24T10:50:28.878879 #25167]  INFO -- : (0.000157s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Howarth', 'Elgar', '')
+I, [2017-07-24T10:50:28.879793 #25167]  INFO -- : (0.000839s) COMMIT
+I, [2017-07-24T10:50:28.879930 #25167]  INFO -- : (0.000030s) BEGIN
+I, [2017-07-24T10:50:28.880180 #25167]  INFO -- : (0.000106s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Iveson', 'John', '')
+I, [2017-07-24T10:50:28.881037 #25167]  INFO -- : (0.000811s) COMMIT
+I, [2017-07-24T10:50:28.881131 #25167]  INFO -- : (0.000023s) BEGIN
+I, [2017-07-24T10:50:28.881449 #25167]  INFO -- : (0.000109s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:28.882266 #25167]  INFO -- : (0.000772s) COMMIT
+I, [2017-07-24T10:50:28.882357 #25167]  INFO -- : (0.000021s) BEGIN
+I, [2017-07-24T10:50:28.882543 #25167]  INFO -- : (0.000093s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:28.883324 #25167]  INFO -- : (0.000741s) COMMIT
+I, [2017-07-24T10:50:28.883407 #25167]  INFO -- : (0.000019s) BEGIN
+I, [2017-07-24T10:50:28.883578 #25167]  INFO -- : (0.000090s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:28.884306 #25167]  INFO -- : (0.000688s) COMMIT
+I, [2017-07-24T10:50:28.884389 #25167]  INFO -- : (0.000020s) BEGIN
+I, [2017-07-24T10:50:28.884600 #25167]  INFO -- : (0.000094s) INSERT INTO `roles` (`role_name`) VALUES ('Performer')
+I, [2017-07-24T10:50:28.886290 #25167]  INFO -- : (0.001639s) COMMIT
+I, [2017-07-24T10:50:28.886426 #25167]  INFO -- : (0.000032s) BEGIN
+I, [2017-07-24T10:50:28.886677 #25167]  INFO -- : (0.000122s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:28.888190 #25167]  INFO -- : (0.001423s) COMMIT
+I, [2017-07-24T10:50:28.888518 #25167]  INFO -- : (0.000098s) BEGIN
+I, [2017-07-24T10:50:28.889724 #25167]  INFO -- : (0.000528s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:28.895774 #25167]  INFO -- : (0.005772s) COMMIT
+I, [2017-07-24T10:50:28.895972 #25167]  INFO -- : (0.000045s) BEGIN
+I, [2017-07-24T10:50:28.896353 #25167]  INFO -- : (0.000165s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 5.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:28.897947 #25167]  INFO -- : (0.001494s) COMMIT
+I, [2017-07-24T10:50:28.898225 #25167]  INFO -- : (0.000051s) BEGIN
+I, [2017-07-24T10:50:28.898980 #25167]  INFO -- : (0.000402s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 6.wav', 243, '1984-01-01', '')
+I, [2017-07-24T10:50:28.902800 #25167]  INFO -- : (0.000900s) COMMIT
+I, [2017-07-24T10:50:28.903347 #25167]  INFO -- : (0.000202s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.903774 #25167]  INFO -- : (0.000160s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:28.904113 #25167]  INFO -- : (0.000148s) SELECT * FROM `recordings` WHERE (`filename` = 'no such filename') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:28.907361 #25167]  INFO -- : (0.000313s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.907430 #25167]  INFO -- : (0.000017s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.907529 #25167]  INFO -- : (0.000060s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.912504 #25167]  INFO -- : (0.001141s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.912915 #25167]  INFO -- : (0.000097s) SELECT count(*) AS 'count' FROM `people` LIMIT 1
+I, [2017-07-24T10:50:28.917121 #25167]  INFO -- : (0.000581s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.917369 #25167]  INFO -- : (0.000056s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.917755 #25167]  INFO -- : (0.000211s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.918563 #25167]  INFO -- : (0.000335s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.923443 #25167]  INFO -- : (0.000172s) BEGIN
+I, [2017-07-24T10:50:28.924388 #25167]  INFO -- : (0.000307s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach')
+I, [2017-07-24T10:50:28.931099 #25167]  INFO -- : (0.006603s) COMMIT
+I, [2017-07-24T10:50:28.931634 #25167]  INFO -- : (0.000138s) SELECT count(*) AS 'count' FROM `people` LIMIT 1
+I, [2017-07-24T10:50:28.933649 #25167]  INFO -- : (0.000466s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.933727 #25167]  INFO -- : (0.000025s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.933850 #25167]  INFO -- : (0.000073s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.935864 #25167]  INFO -- : (0.001870s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.936025 #25167]  INFO -- : (0.000038s) BEGIN
+I, [2017-07-24T10:50:28.936386 #25167]  INFO -- : (0.000134s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach')
+I, [2017-07-24T10:50:28.951341 #25167]  INFO -- : (0.014858s) COMMIT
+I, [2017-07-24T10:50:28.952365 #25167]  INFO -- : (0.000336s) SELECT * FROM `people` ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.952763 #25167]  INFO -- : (0.000173s) SELECT * FROM `people` ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.953160 #25167]  INFO -- : (0.000220s) SELECT * FROM `people` ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.954957 #25167]  INFO -- : (0.000303s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.955032 #25167]  INFO -- : (0.000024s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.955156 #25167]  INFO -- : (0.000070s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.956505 #25167]  INFO -- : (0.001175s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.956648 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:28.956946 #25167]  INFO -- : (0.000127s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach')
+I, [2017-07-24T10:50:28.957844 #25167]  INFO -- : (0.000839s) COMMIT
+I, [2017-07-24T10:50:28.957980 #25167]  INFO -- : (0.000023s) BEGIN
+I, [2017-07-24T10:50:28.958211 #25167]  INFO -- : (0.000097s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.968080 #25167]  INFO -- : (0.009793s) COMMIT
+I, [2017-07-24T10:50:28.968812 #25167]  INFO -- : (0.000268s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.969314 #25167]  INFO -- : (0.000185s) SELECT * FROM `people` WHERE ((`surname` = 'Bach') AND (`given_name` = 'Johann Sebastian')) ORDER BY `surname`, `given_name` LIMIT 1
+I, [2017-07-24T10:50:28.972513 #25167]  INFO -- : (0.001602s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.972592 #25167]  INFO -- : (0.000026s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.972799 #25167]  INFO -- : (0.000138s) SELECT sqlite_version()
+I, [2017-07-24T10:50:28.974859 #25167]  INFO -- : (0.001845s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:28.975143 #25167]  INFO -- : (0.000066s) BEGIN
+I, [2017-07-24T10:50:28.978988 #25167]  INFO -- : (0.000286s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach')
+I, [2017-07-24T10:50:28.983638 #25167]  INFO -- : (0.004528s) COMMIT
+I, [2017-07-24T10:50:28.983820 #25167]  INFO -- : (0.000039s) BEGIN
+I, [2017-07-24T10:50:28.984150 #25167]  INFO -- : (0.000165s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:28.986287 #25167]  INFO -- : (0.002049s) COMMIT
+I, [2017-07-24T10:50:28.986555 #25167]  INFO -- : (0.000072s) BEGIN
+I, [2017-07-24T10:50:28.988772 #25167]  INFO -- : (0.001917s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:28.990397 #25167]  INFO -- : (0.001498s) COMMIT
+I, [2017-07-24T10:50:28.991157 #25167]  INFO -- : (0.000196s) SELECT count(*) AS 'count' FROM `people` WHERE (`surname` = 'Bach') LIMIT 1
+I, [2017-07-24T10:50:28.997869 #25167]  INFO -- : (0.000934s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:28.998127 #25167]  INFO -- : (0.000070s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:28.998497 #25167]  INFO -- : (0.000154s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.005000 #25167]  INFO -- : (0.006170s) DELETE FROM `people` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.005282 #25167]  INFO -- : (0.000070s) BEGIN
+I, [2017-07-24T10:50:29.005798 #25167]  INFO -- : (0.000218s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Wagner', 'Richard', '')
+I, [2017-07-24T10:50:29.008001 #25167]  INFO -- : (0.002091s) COMMIT
+I, [2017-07-24T10:50:29.008190 #25167]  INFO -- : (0.000041s) BEGIN
+I, [2017-07-24T10:50:29.008532 #25167]  INFO -- : (0.000157s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Carl Philip Emmanuel', 'C.P.E. Bach')
+I, [2017-07-24T10:50:29.011523 #25167]  INFO -- : (0.002912s) COMMIT
+I, [2017-07-24T10:50:29.011719 #25167]  INFO -- : (0.000041s) BEGIN
+I, [2017-07-24T10:50:29.012030 #25167]  INFO -- : (0.000134s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Jones', 'Philip', '')
+I, [2017-07-24T10:50:29.012881 #25167]  INFO -- : (0.000784s) COMMIT
+I, [2017-07-24T10:50:29.013062 #25167]  INFO -- : (0.000031s) BEGIN
+I, [2017-07-24T10:50:29.013314 #25167]  INFO -- : (0.000108s) INSERT INTO `people` (`surname`, `given_name`, `nickname`) VALUES ('Bach', 'Johann Sebastian', '')
+I, [2017-07-24T10:50:29.014145 #25167]  INFO -- : (0.000771s) COMMIT
+I, [2017-07-24T10:50:29.014497 #25167]  INFO -- : (0.000184s) SELECT * FROM `people` ORDER BY `surname`, `given_name`
+I, [2017-07-24T10:50:29.022619 #25167]  INFO -- : (0.000361s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.022719 #25167]  INFO -- : (0.000024s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.022846 #25167]  INFO -- : (0.000074s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.029736 #25167]  INFO -- : (0.006714s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.029971 #25167]  INFO -- : (0.000056s) BEGIN
+I, [2017-07-24T10:50:29.030453 #25167]  INFO -- : (0.000274s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:29.032039 #25167]  INFO -- : (0.001489s) COMMIT
+I, [2017-07-24T10:50:29.032347 #25167]  INFO -- : (0.000052s) BEGIN
+I, [2017-07-24T10:50:29.032718 #25167]  INFO -- : (0.000156s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:29.035284 #25167]  INFO -- : (0.002500s) COMMIT
+I, [2017-07-24T10:50:29.044270 #25167]  INFO -- : (0.008730s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.044531 #25167]  INFO -- : (0.000063s) BEGIN
+I, [2017-07-24T10:50:29.045065 #25167]  INFO -- : (0.000242s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:29.048051 #25167]  INFO -- : (0.002880s) COMMIT
+I, [2017-07-24T10:50:29.048247 #25167]  INFO -- : (0.000044s) BEGIN
+I, [2017-07-24T10:50:29.048624 #25167]  INFO -- : (0.000179s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 3.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:29.049675 #25167]  INFO -- : (0.000974s) COMMIT
+I, [2017-07-24T10:50:29.050262 #25167]  INFO -- : (0.000171s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:29.050637 #25167]  INFO -- : (0.000176s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/Track 2.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:29.050747 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:29.051019 #25167]  INFO -- : (0.000120s) INSERT INTO `pieces_recordings` (`piece_id`, `recording_id`) VALUES (20, 40)
+I, [2017-07-24T10:50:29.057494 #25167]  INFO -- : (0.006395s) COMMIT
+I, [2017-07-24T10:50:29.058315 #25167]  INFO -- : (0.000249s) SELECT * FROM `pieces_recordings` WHERE ((`piece_id` = 20) AND (`recording_id` = 40))
+I, [2017-07-24T10:50:29.061482 #25167]  INFO -- : (0.000344s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.061568 #25167]  INFO -- : (0.000026s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.061703 #25167]  INFO -- : (0.000081s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.068100 #25167]  INFO -- : (0.006240s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.068604 #25167]  INFO -- : (0.000113s) BEGIN
+I, [2017-07-24T10:50:29.069212 #25167]  INFO -- : (0.000199s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:29.070795 #25167]  INFO -- : (0.001482s) COMMIT
+I, [2017-07-24T10:50:29.071117 #25167]  INFO -- : (0.000064s) BEGIN
+I, [2017-07-24T10:50:29.071667 #25167]  INFO -- : (0.000217s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:29.072941 #25167]  INFO -- : (0.001197s) COMMIT
+I, [2017-07-24T10:50:29.075476 #25167]  INFO -- : (0.002337s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.075600 #25167]  INFO -- : (0.000031s) BEGIN
+I, [2017-07-24T10:50:29.075925 #25167]  INFO -- : (0.000120s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:29.076774 #25167]  INFO -- : (0.000793s) COMMIT
+I, [2017-07-24T10:50:29.076889 #25167]  INFO -- : (0.000027s) BEGIN
+I, [2017-07-24T10:50:29.077131 #25167]  INFO -- : (0.000115s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 3.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:29.080013 #25167]  INFO -- : (0.002818s) COMMIT
+I, [2017-07-24T10:50:29.080516 #25167]  INFO -- : (0.000157s) SELECT * FROM `pieces` WHERE ((`title` = 'No such piece') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:29.081879 #25167]  INFO -- : (0.000265s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.081934 #25167]  INFO -- : (0.000019s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.082192 #25167]  INFO -- : (0.000081s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.089488 #25167]  INFO -- : (0.007136s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.089887 #25167]  INFO -- : (0.000110s) BEGIN
+I, [2017-07-24T10:50:29.090518 #25167]  INFO -- : (0.000290s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:29.091922 #25167]  INFO -- : (0.001322s) COMMIT
+I, [2017-07-24T10:50:29.092071 #25167]  INFO -- : (0.000030s) BEGIN
+I, [2017-07-24T10:50:29.092328 #25167]  INFO -- : (0.000123s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:29.107292 #25167]  INFO -- : (0.014894s) COMMIT
+I, [2017-07-24T10:50:29.118428 #25167]  INFO -- : (0.010834s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.118703 #25167]  INFO -- : (0.000049s) BEGIN
+I, [2017-07-24T10:50:29.119077 #25167]  INFO -- : (0.000167s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 2.wav', 193, '1984-01-01', '')
+I, [2017-07-24T10:50:29.120861 #25167]  INFO -- : (0.001711s) COMMIT
+I, [2017-07-24T10:50:29.121043 #25167]  INFO -- : (0.000040s) BEGIN
+I, [2017-07-24T10:50:29.121404 #25167]  INFO -- : (0.000181s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/Track 3.wav', 163, '1984-01-01', '')
+I, [2017-07-24T10:50:29.122271 #25167]  INFO -- : (0.000806s) COMMIT
+I, [2017-07-24T10:50:29.122664 #25167]  INFO -- : (0.000130s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:29.122909 #25167]  INFO -- : (0.000132s) SELECT * FROM `recordings` WHERE (`filename` = 'no such filename') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:29.124401 #25167]  INFO -- : (0.000267s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.124457 #25167]  INFO -- : (0.000018s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.124562 #25167]  INFO -- : (0.000052s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.127583 #25167]  INFO -- : (0.002901s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.127957 #25167]  INFO -- : (0.000097s) SELECT count(*) AS 'count' FROM `pieces` LIMIT 1
+I, [2017-07-24T10:50:29.129652 #25167]  INFO -- : (0.000390s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.129720 #25167]  INFO -- : (0.000022s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.129830 #25167]  INFO -- : (0.000066s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.130057 #25167]  INFO -- : (0.000108s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.130200 #25167]  INFO -- : (0.000064s) BEGIN
+I, [2017-07-24T10:50:29.130461 #25167]  INFO -- : (0.000114s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:29.134837 #25167]  INFO -- : (0.004306s) COMMIT
+I, [2017-07-24T10:50:29.135360 #25167]  INFO -- : (0.000126s) SELECT count(*) AS 'count' FROM `pieces` LIMIT 1
+I, [2017-07-24T10:50:29.138376 #25167]  INFO -- : (0.000285s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.138446 #25167]  INFO -- : (0.000020s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.138555 #25167]  INFO -- : (0.000065s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.143518 #25167]  INFO -- : (0.004798s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.143883 #25167]  INFO -- : (0.000082s) BEGIN
+I, [2017-07-24T10:50:29.145053 #25167]  INFO -- : (0.000542s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:29.147962 #25167]  INFO -- : (0.002666s) COMMIT
+I, [2017-07-24T10:50:29.148441 #25167]  INFO -- : (0.000159s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:29.157901 #25167]  INFO -- : (0.000427s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.157994 #25167]  INFO -- : (0.000027s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.158128 #25167]  INFO -- : (0.000079s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.160447 #25167]  INFO -- : (0.002147s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.160615 #25167]  INFO -- : (0.000038s) BEGIN
+I, [2017-07-24T10:50:29.160887 #25167]  INFO -- : (0.000118s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:29.165226 #25167]  INFO -- : (0.004184s) COMMIT
+I, [2017-07-24T10:50:29.165875 #25167]  INFO -- : (0.000139s) BEGIN
+I, [2017-07-24T10:50:29.166571 #25167]  INFO -- : (0.000239s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:29.170857 #25167]  INFO -- : (0.004136s) COMMIT
+I, [2017-07-24T10:50:29.171550 #25167]  INFO -- : (0.000204s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Nun seid Ihr wohl gerochen')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:29.171986 #25167]  INFO -- : (0.000146s) SELECT * FROM `pieces` WHERE ((`title` = 'Christmas Oratorio') AND (`subtitle` = 'Ach, mein hertzliches Jesulein')) ORDER BY `title`, `subtitle` LIMIT 1
+I, [2017-07-24T10:50:29.175878 #25167]  INFO -- : (0.000350s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.175967 #25167]  INFO -- : (0.000022s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.176096 #25167]  INFO -- : (0.000077s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.178767 #25167]  INFO -- : (0.002529s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.178932 #25167]  INFO -- : (0.000036s) BEGIN
+I, [2017-07-24T10:50:29.179305 #25167]  INFO -- : (0.000152s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:29.180143 #25167]  INFO -- : (0.000774s) COMMIT
+I, [2017-07-24T10:50:29.180268 #25167]  INFO -- : (0.000027s) BEGIN
+I, [2017-07-24T10:50:29.180545 #25167]  INFO -- : (0.000148s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:29.182677 #25167]  INFO -- : (0.002065s) COMMIT
+I, [2017-07-24T10:50:29.183067 #25167]  INFO -- : (0.000105s) SELECT count(*) AS 'count' FROM `pieces` WHERE (`title` = 'Christmas Oratorio') LIMIT 1
+I, [2017-07-24T10:50:29.196630 #25167]  INFO -- : (0.000452s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.196789 #25167]  INFO -- : (0.000029s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.196968 #25167]  INFO -- : (0.000085s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.198318 #25167]  INFO -- : (0.001201s) DELETE FROM `pieces` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.198470 #25167]  INFO -- : (0.000036s) BEGIN
+I, [2017-07-24T10:50:29.198781 #25167]  INFO -- : (0.000131s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Nun seid Ihr wohl gerochen')
+I, [2017-07-24T10:50:29.209730 #25167]  INFO -- : (0.010848s) COMMIT
+I, [2017-07-24T10:50:29.210012 #25167]  INFO -- : (0.000064s) BEGIN
+I, [2017-07-24T10:50:29.210485 #25167]  INFO -- : (0.000231s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Christmas Oratorio', 'Ach, mein hertzliches Jesulein')
+I, [2017-07-24T10:50:29.232820 #25167]  INFO -- : (0.022201s) COMMIT
+I, [2017-07-24T10:50:29.233036 #25167]  INFO -- : (0.000046s) BEGIN
+I, [2017-07-24T10:50:29.233424 #25167]  INFO -- : (0.000167s) INSERT INTO `pieces` (`title`, `subtitle`) VALUES ('Little Red Corvette', '')
+I, [2017-07-24T10:50:29.234346 #25167]  INFO -- : (0.000845s) COMMIT
+I, [2017-07-24T10:50:29.234717 #25167]  INFO -- : (0.000169s) SELECT * FROM `pieces` ORDER BY `title`, `subtitle`
+I, [2017-07-24T10:50:29.236496 #25167]  INFO -- : (0.000421s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.236659 #25167]  INFO -- : (0.000088s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.236835 #25167]  INFO -- : (0.000067s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.244797 #25167]  INFO -- : (0.007781s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.246308 #25167]  INFO -- : (0.000337s) SELECT count(*) AS 'count' FROM `recordings` LIMIT 1
+I, [2017-07-24T10:50:29.252604 #25167]  INFO -- : (0.000499s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.252713 #25167]  INFO -- : (0.000030s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.252978 #25167]  INFO -- : (0.000116s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.253363 #25167]  INFO -- : (0.000181s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.253531 #25167]  INFO -- : (0.000025s) BEGIN
+I, [2017-07-24T10:50:29.253863 #25167]  INFO -- : (0.000127s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/track1.wav', 537, '1984-01-01', 'Some great brass playing')
+I, [2017-07-24T10:50:29.255891 #25167]  INFO -- : (0.001965s) COMMIT
+I, [2017-07-24T10:50:29.256286 #25167]  INFO -- : (0.000108s) SELECT count(*) AS 'count' FROM `recordings` LIMIT 1
+I, [2017-07-24T10:50:29.270434 #25167]  INFO -- : (0.000515s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.270559 #25167]  INFO -- : (0.000034s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.270738 #25167]  INFO -- : (0.000106s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.272681 #25167]  INFO -- : (0.001754s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.272885 #25167]  INFO -- : (0.000047s) BEGIN
+I, [2017-07-24T10:50:29.273346 #25167]  INFO -- : (0.000206s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('PJBE - Brass Splendour/track1.wav', 537, '1984-01-01', 'Some great brass playing')
+I, [2017-07-24T10:50:29.274527 #25167]  INFO -- : (0.001099s) COMMIT
+I, [2017-07-24T10:50:29.274990 #25167]  INFO -- : (0.000218s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/track1.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:29.275772 #25167]  INFO -- : (0.000239s) SELECT * FROM `recordings` WHERE (`filename` = 'PJBE - Brass Splendour/track1.wav') ORDER BY `filename` LIMIT 1
+I, [2017-07-24T10:50:29.279117 #25167]  INFO -- : (0.000332s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.279837 #25167]  INFO -- : (0.000042s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.280136 #25167]  INFO -- : (0.000181s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.284491 #25167]  INFO -- : (0.004126s) DELETE FROM `recordings` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.284715 #25167]  INFO -- : (0.000046s) BEGIN
+I, [2017-07-24T10:50:29.285065 #25167]  INFO -- : (0.000153s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('filename 3', 69, '1984-01-01', '')
+I, [2017-07-24T10:50:29.285839 #25167]  INFO -- : (0.000721s) COMMIT
+I, [2017-07-24T10:50:29.285951 #25167]  INFO -- : (0.000025s) BEGIN
+I, [2017-07-24T10:50:29.287017 #25167]  INFO -- : (0.000496s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('filename 1', 69, '1984-01-01', '')
+I, [2017-07-24T10:50:29.290990 #25167]  INFO -- : (0.003815s) COMMIT
+I, [2017-07-24T10:50:29.291236 #25167]  INFO -- : (0.000081s) BEGIN
+I, [2017-07-24T10:50:29.291616 #25167]  INFO -- : (0.000188s) INSERT INTO `recordings` (`filename`, `duration_in_seconds`, `recording_date`, `description`) VALUES ('filename 2', 69, '1984-01-01', '')
+I, [2017-07-24T10:50:29.292547 #25167]  INFO -- : (0.000869s) COMMIT
+I, [2017-07-24T10:50:29.292911 #25167]  INFO -- : (0.000212s) SELECT * FROM `recordings` ORDER BY `filename`
+I, [2017-07-24T10:50:29.296001 #25167]  INFO -- : (0.000261s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.296063 #25167]  INFO -- : (0.000020s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.296170 #25167]  INFO -- : (0.000065s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.309107 #25167]  INFO -- : (0.012793s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.309620 #25167]  INFO -- : (0.000141s) SELECT count(*) AS 'count' FROM `roles` LIMIT 1
+I, [2017-07-24T10:50:29.311251 #25167]  INFO -- : (0.000312s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.311311 #25167]  INFO -- : (0.000019s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.311445 #25167]  INFO -- : (0.000091s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.311644 #25167]  INFO -- : (0.000090s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.311737 #25167]  INFO -- : (0.000023s) BEGIN
+I, [2017-07-24T10:50:29.311960 #25167]  INFO -- : (0.000107s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:29.314023 #25167]  INFO -- : (0.002011s) COMMIT
+I, [2017-07-24T10:50:29.314362 #25167]  INFO -- : (0.000098s) SELECT count(*) AS 'count' FROM `roles` LIMIT 1
+I, [2017-07-24T10:50:29.316918 #25167]  INFO -- : (0.000338s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.317000 #25167]  INFO -- : (0.000023s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.317125 #25167]  INFO -- : (0.000073s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.321665 #25167]  INFO -- : (0.004333s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.322138 #25167]  INFO -- : (0.000114s) BEGIN
+I, [2017-07-24T10:50:29.322784 #25167]  INFO -- : (0.000290s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:29.327530 #25167]  INFO -- : (0.004641s) COMMIT
+I, [2017-07-24T10:50:29.328005 #25167]  INFO -- : (0.000219s) SELECT * FROM `roles` ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:29.329832 #25167]  INFO -- : (0.000390s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.329899 #25167]  INFO -- : (0.000020s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.330011 #25167]  INFO -- : (0.000067s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.331065 #25167]  INFO -- : (0.000930s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.332502 #25167]  INFO -- : (0.001346s) BEGIN
+I, [2017-07-24T10:50:29.332806 #25167]  INFO -- : (0.000114s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:29.333686 #25167]  INFO -- : (0.000830s) COMMIT
+I, [2017-07-24T10:50:29.333795 #25167]  INFO -- : (0.000024s) BEGIN
+I, [2017-07-24T10:50:29.333991 #25167]  INFO -- : (0.000099s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:29.334776 #25167]  INFO -- : (0.000744s) COMMIT
+I, [2017-07-24T10:50:29.335070 #25167]  INFO -- : (0.000087s) SELECT count(*) AS 'count' FROM `roles` LIMIT 1
+I, [2017-07-24T10:50:29.351032 #25167]  INFO -- : (0.000361s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.351121 #25167]  INFO -- : (0.000023s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.351295 #25167]  INFO -- : (0.000082s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.352564 #25167]  INFO -- : (0.001125s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.352704 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:29.352983 #25167]  INFO -- : (0.000121s) INSERT INTO `roles` (`role_name`) VALUES ('Composer')
+I, [2017-07-24T10:50:29.353809 #25167]  INFO -- : (0.000766s) COMMIT
+I, [2017-07-24T10:50:29.354125 #25167]  INFO -- : (0.000140s) SELECT * FROM `roles` WHERE (`role_name` = 'Composer') ORDER BY `role_name` LIMIT 1
+I, [2017-07-24T10:50:29.355566 #25167]  INFO -- : (0.000261s) PRAGMA foreign_keys = 1
+I, [2017-07-24T10:50:29.355623 #25167]  INFO -- : (0.000019s) PRAGMA case_sensitive_like = 1
+I, [2017-07-24T10:50:29.355725 #25167]  INFO -- : (0.000054s) SELECT sqlite_version()
+I, [2017-07-24T10:50:29.356775 #25167]  INFO -- : (0.000950s) DELETE FROM `roles` WHERE (1 = 1)
+I, [2017-07-24T10:50:29.356885 #25167]  INFO -- : (0.000026s) BEGIN
+I, [2017-07-24T10:50:29.357101 #25167]  INFO -- : (0.000096s) INSERT INTO `roles` (`role_name`) VALUES ('Soloist')
+I, [2017-07-24T10:50:29.358945 #25167]  INFO -- : (0.001787s) COMMIT
+I, [2017-07-24T10:50:29.359096 #25167]  INFO -- : (0.000034s) BEGIN
+I, [2017-07-24T10:50:29.359402 #25167]  INFO -- : (0.000140s) INSERT INTO `roles` (`role_name`) VALUES ('Arranger')
+I, [2017-07-24T10:50:29.360591 #25167]  INFO -- : (0.001116s) COMMIT
+I, [2017-07-24T10:50:29.360818 #25167]  INFO -- : (0.000076s) BEGIN
+I, [2017-07-24T10:50:29.361367 #25167]  INFO -- : (0.000262s) INSERT INTO `roles` (`role_name`) VALUES ('Engineer')
+I, [2017-07-24T10:50:29.365056 #25167]  INFO -- : (0.003526s) COMMIT
+I, [2017-07-24T10:50:29.365305 #25167]  INFO -- : (0.000057s) BEGIN
+I, [2017-07-24T10:50:29.365853 #25167]  INFO -- : (0.000265s) INSERT INTO `roles` (`role_name`) VALUES ('Conductor')
+I, [2017-07-24T10:50:29.368544 #25167]  INFO -- : (0.002569s) COMMIT
+I, [2017-07-24T10:50:29.368963 #25167]  INFO -- : (0.000183s) SELECT * FROM `roles` ORDER BY `role_name`
