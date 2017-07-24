@@ -1,5 +1,5 @@
 # sqlite3 database files are generated
-db/*
+#db/*
 
 # sequel log files are generated
 logs/*
