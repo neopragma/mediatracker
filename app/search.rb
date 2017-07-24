@@ -12,6 +12,9 @@ class Search
   end
 
   def find_recordings_by_role role_name, values_hash
+
+puts "Search.find_recordings_by_role: role_name: #{role_name}, values_hash: #{values_hash}"
+
     person_id = lookup_person_id_for values_hash[:surname], values_hash[:given_name]
     role_id = lookup_role_id_for role_name
     @db[:recordings, :pieces, :pieces_recordings, :people_roles_recordings]

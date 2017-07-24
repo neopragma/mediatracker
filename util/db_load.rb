@@ -74,7 +74,7 @@ class DbLoad
       [ 'Copland', 'Aaron', '' ],
       [ 'Dvorak', 'Antonin', '' ],
       [ 'Gabrieli', 'Giovanni', '' ],
-      [ 'Handel', 'Georg Fridric', '' ],
+      [ 'Handel', 'Georg Fridrick', '' ],
       [ 'Howarth', 'Elgar', '' ],
       [ 'Jones', 'Philip', '' ],
       [ 'Mussorgsky', 'Modest', '' ],
@@ -131,7 +131,7 @@ class DbLoad
       [ 'Copland', 'Aaron', 'Composer', 'Fanfare for the Common Man', '' ],
       [ 'Dvorak', 'Antonin', 'Composer', 'Humoresque', 'Op. 101, No. 7' ],
       [ 'Gabrieli', 'Giovanni', 'Composer', 'Sonata pian\'e forte', '' ],
-      [ 'Handel', 'Georg Fridric', 'Composer', 'Music for the Royal Fireworks', '' ],
+      [ 'Handel', 'Georg Fridrick', 'Composer', 'Music for the Royal Fireworks', '' ],
       [ 'Mussorgsky', 'Modest', 'Composer', 'Pictures at an Exhibition', 'Baba Yaga' ],
       [ 'Mussorgsky', 'Modest', 'Composer', 'Pictures at an Exhibition', 'Great Gate of Kiev' ],
       [ 'Purcell', 'Henry', 'Composer', 'Trumpet Tune and Air' ],
@@ -187,6 +187,20 @@ class DbLoad
         { :title => title,
           :subtitle => subtitle,
           :filename => filename
+        })
+    end
+
+    # table: people_roles_recordings
+    [
+      [ 'Handel', 'Georg Fridrick', 'Composer', 'PJBE - Brass Splendour/Track 1.wav' ],
+      [ 'Bach', 'Johann Sebastian', 'Composer', 'PJBE - Brass Splendour/Track 2.wav' ],
+      [ 'Bach', 'Johann Sebastian', 'Composer', 'PJBE - Brass Splendour/Track 3.wav' ],
+    ].each do |data|
+      associate_person_role_and_recording(
+        { :surname => data[0],
+          :given_name => data[1],
+          :role_name => data[2],
+          :filename => data[3]
         })
     end
 
