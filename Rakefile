@@ -31,7 +31,7 @@ end
 
 task :reset_db do
   touch "#{ENV['PROJECT_ROOT']}/db/#{ENV['DATABASE_NAME']}"
-  sleep 2
+  sh "ls -la \"#{ENV['PROJECT_ROOT']}/db\""
   ruby "#{ENV['PROJECT_ROOT']}/util/db_init.rb"
 end
 
