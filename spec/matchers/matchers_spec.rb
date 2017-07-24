@@ -59,6 +59,14 @@ RSpec::Matchers.define :include_groups do |expected|
   end
 end
 
+RSpec::Matchers.define :include_group_types do |expected|
+  match do |actual|
+    actual.each do |row|
+      expected.include?({ :group_type_name => row[:group_type_name] })
+    end
+  end
+end
+
 RSpec::Matchers.define :include_labels do |expected|
   match do |actual|
     actual.each do |row|
