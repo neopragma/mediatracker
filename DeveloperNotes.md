@@ -17,7 +17,7 @@ Ubuntu Linux 16.04 or later. Has not been used on any other platform. In princip
 
 ## setup
 
-Look at the file ```.envvars``` and change any values you need to change for your development environment. If you clone the repo as-is and use sqlite3 as your database system, you won't have to change anything. If you fork the project and give your version a different name, you might need to change the values of environment variables ```PROJECT_NAME``` and ```PROJECT_ROOT```. If you use a different database management system or you want to name your database differently, you'll need to change ```DATABASE_NAME``` and possibly ```DATABASE_URL```. You may also need to add user credentials, depending on how you set things up with your database management system. I'm using unsecured sqlite3 - no user credentials necessary. Because this is a cloud-deployed, self-contained solution that's built offline, there's no harm done if someone corrupts the database. There's no secret information in there, anyway.
+Look at the file ```.envvars``` and change any values you need to change for your development environment.
 
 To get started with development (assuming your personal workflow is similar to mine), start by navigating to the project root directory and sourcing the ```.envvars``` file to set the environment variables.
 
@@ -31,23 +31,32 @@ or
 source .envvars
 ```
 
-Next, run the script ```createdb``` to create a sqlite3 database file (or do whatever you need to do for the database system you're using, if it's not squlite3).
+Install dependencies with ```bundler```. If you don't already have ```bundler``` on your development system, install it with ```gem install bundler``` or whatever ruby version manager you may be using (such as ```rvm``` or ```rbenv```). Then use ```bundler``` to install dependencies.
 
 ```shell
-createdb
+bundle install --path vendor
 ```
 
-That script doesn't create any tables, it only creates an empty file. To load the database with test data, run the ```loaddb``` script.
+Next, create the database. There's a ```rake``` task for that. The sqlite3 database is a single file. Its name depends on the setting of environment variable ```RAKE_ENV```. Accordingly the database filename could be:
+
+* db/mediatracker-development
+* db/mediatracker-test
+* db/mediatracker-staging
+* db/mediatracker-production
 
 ```shell
-loaddb
+bundle exec rake reset_db
 ```
 
-The ```loaddb``` script creates the ```logs/``` directory, creates tables, and loads the tables with some sample data.
+That task creates a database file and creates the tables, but doesn't load any content. There is no need to pre-load the database to run ```rspec``` tests. If you want to load the database with predefined test data, run the ```loaddb``` script or the ```rake``` task ```load_db```. The cukes depend on pre-loaded, known test data. The ```rake``` task ```cukes``` will load the database, but the task ```cucumber``` will not. You can also load the test data with the following ```rake``` task:
+
+```shell
+bundle exec rake load_db
+```
 
 ## run specs
 
-The default ```rake``` task clears all the data in the databse and invokes the standard Rspec ```spec``` task.
+The default ```rake``` task clears all the data in the database and invokes the standard Rspec ```spec``` task.
 
 ```shell
 bundle exec rake
@@ -64,5 +73,5 @@ rackup
 Then you can execute the cukes through Bundler.
 
 ```
-bundle exec cucumber
+bundle exec rake cukes
 ```
