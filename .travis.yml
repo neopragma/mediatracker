@@ -16,7 +16,7 @@ script:
 - bundle exec rake
 - rackup &
 - bundle exec rake cukes
-- kill `cat rpn_service.pid`
+#- kill `cat rpn_service.pid`
 #deploy:
 #  provider: heroku
 #  app: mediatracker
