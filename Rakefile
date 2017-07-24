@@ -27,6 +27,8 @@ end
 
 task :clean do
   rm ENV['SEQUEL_LOG'] if File.exist?(ENV['SEQUEL_LOG'])
+  mkdir_p 'logs'
+  touch ENV['SEQUEL_LOG']
 end
 
 task :reset_db do
