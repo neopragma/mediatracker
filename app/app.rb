@@ -2,8 +2,13 @@ require 'sinatra'
 require 'json'
 require 'yaml'
 require_relative "./search"
+require_relative "./usage"
 
 $config = YAML.load_file("config/config.yml")
+
+get '/' do
+  return_as_json Usage.new.help
+end
 
 get '/recordings/by/composer/:surname/:given_name' do
   return_as_json(
@@ -14,7 +19,6 @@ get '/recordings/by/composer/:surname/:given_name' do
 end
 
 def search
-  puts "self test: #{self.class.methods}"
   @search ||= Search.new
 end
 
