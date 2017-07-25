@@ -14,6 +14,7 @@ get '/recordings/by/composer/:surname/:given_name' do
 end
 
 def search
+  puts "self test: #{self.class.methods}"
   @search ||= Search.new
 end
 
