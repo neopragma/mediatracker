@@ -6,6 +6,8 @@ require_relative "../../util/bulk_load"
 # fact it does not work (or did not at the time I tried it) read a StringIO
 # object correctly. It is necessary to write actual files for testing it.
 
+TEST_FIXTURES = 'spec/bulk_load/fixtures/data.csv'
+
 context 'bulk load:' do
   before do
     @db = Db.new
@@ -14,17 +16,15 @@ context 'bulk load:' do
 
   describe 'populate groups table:' do
     before do
-      @db.clear_table :groups
       load_test_fixture :groups
+      @loader.load_data
     end
 
     it 'loads 2 rows into the groups table from the delimited file' do
-      @loader.load_data
       expect(@db.groups.count).to eq 2
     end
 
     it 'loads the expected values into the groups table' do
-      @loader.load_data
       expect(@db.groups).to include_groups([
         'The Beatles',
         'Philip Jones Brass Ensemble'
@@ -34,17 +34,15 @@ context 'bulk load:' do
 
   describe 'populate group_types table:' do
     before do
-      @db.clear_table :group_types
       load_test_fixture :group_types
+      @loader.load_data
     end
 
-    it 'loads 2 rows into the group_types table from the delimited file' do
-      @loader.load_data
-      expect(@db.group_types.count).to eq 2
+    it 'loads 3 rows into the group_types table from the delimited file' do
+      expect(@db.group_types.count).to eq 3
     end
 
     it 'loads the expected values into the group_types table' do
-      @loader.load_data
       expect(@db.group_types).to include_group_types([
         'Pop Band',
         'Brass Ensemble'
@@ -52,22 +50,22 @@ context 'bulk load:' do
     end
   end
 
-=begin
-    it 'raises runtime error when the role "Composer" is not in the roles table' do
-      set_up_bach_recordings
-      @db.transaction do
-        @db.dataset(:roles).where(:role_name => 'Composer').delete
-      end
-
-      expect{ @search.find_recordings_by_composer({
-        :surname => 'Bach',
-        :given_name => 'Johann Sebastian'
-      })}.to raise_error 'The role "Composer" is not in the roles table. '\
-                         'Most likely the database has not been loaded correctly.'
+  describe 'populate group_type_synonyms table:' do
+    before do
+      load_test_fixture :group_types
+      @loader.load_data
+      load_test_fixture :group_type_synonyms
+      @loader.load_data
     end
-=end
+
+    it 'loads 1 row into the group_type_synonyms table' do
+      expect(@db.find_base_group_type_for_synonym('Rock Band')[:group_type_name])
+        .to eq('Pop Band')
+    end
+  end
 
   def load_test_fixture table_name
+    File.delete(TEST_FIXTURES)
     data = {
       :groups => [
         'table_name;group_name;',
@@ -77,10 +75,16 @@ context 'bulk load:' do
       :group_types => [
         'table_name;group_type_name;',
         'group_types;Pop Band;',
-        'group_types;Brass Ensemble'
+        'group_types;Rock Band;',
+        'group_types;Brass Ensemble;'
+      ],
+      :group_type_synonyms => [
+        'table_name;base_group_type;synonym_group_type;',
+        'group_type_synonyms;Pop Band;Rock Band;'
       ]
     }
-    File.open('spec/bulk_load/fixtures/data.csv', "w") do |file|
+    File.open(TEST_FIXTURES, "a") do |file|
+      @db.clear_table table_name
       data[table_name].each do |line|
         file.puts line
       end
