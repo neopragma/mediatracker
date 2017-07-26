@@ -25,4 +25,11 @@ class BulkLoad
     associate_group_type_and_synonym "#{row[:base_group_type]}", "#{row[:synonym_group_type]}"
   end
 
+  def load_groups_group_types row
+    associate_group_and_group_type({
+      :group_name => row[:group_name],
+      :group_type_name => row[:group_type_name]
+    })
+  end
+
 end

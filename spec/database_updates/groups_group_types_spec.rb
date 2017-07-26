@@ -30,6 +30,7 @@ context 'sequel gem:' do
     end
 
     it 'associates a group with a group type' do
+
       expect($dbtest.associate_group_and_group_type(
         { :group_name => 'Philip Jones Brass Ensemble',
           :group_type_name => 'Brass Ensemble'

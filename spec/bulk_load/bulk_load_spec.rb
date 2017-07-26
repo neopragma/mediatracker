@@ -58,9 +58,27 @@ context 'bulk load:' do
       @loader.load_data
     end
 
-    it 'loads 1 row into the group_type_synonyms table' do
+    it 'loads group_types to group_type_synonyms associations' do
       expect(@db.find_base_group_type_for_synonym('Rock Band')[:group_type_name])
         .to eq('Pop Band')
+    end
+  end
+
+  describe 'it populates groups_group_types table:' do
+    before do
+      load_test_fixture :groups
+      @loader.load_data
+      load_test_fixture :group_types
+      @loader.load_data
+    end
+
+    it 'loads groups to group_types associations' do
+      expect(@db.associate_group_and_group_type(
+        { :group_name => 'Philip Jones Brass Ensemble',
+          :group_type_name => 'Brass Ensemble'
+        })).to include_groups([
+          { :group_name => 'Philip Jones Brass Ensemble' }
+        ])
     end
   end
 
@@ -81,6 +99,11 @@ context 'bulk load:' do
       :group_type_synonyms => [
         'table_name;base_group_type;synonym_group_type;',
         'group_type_synonyms;Pop Band;Rock Band;'
+      ],
+      :groups_group_types => [
+        'table_name;group_name;group_type_name;',
+        'groups_group_types;Philip Jones Brass Ensemble;Brass Ensemble;',
+        'groups_group_types;The Beatles;Pop Band;',
       ]
     }
     File.open(TEST_FIXTURES, "a") do |file|
