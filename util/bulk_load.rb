@@ -32,4 +32,8 @@ class BulkLoad
     })
   end
 
+  def load_labels row
+    add_label "#{row[:label_name]}"
+  end
+
 end

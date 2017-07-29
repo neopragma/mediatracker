@@ -82,6 +82,21 @@ context 'bulk load:' do
     end
   end
 
+  describe 'it populates the labels table' do
+    before do
+      load_test_fixture :labels
+      @loader.load_data
+    end
+
+    it 'loads label names' do
+      expect(@db.labels).to include_labels([
+        'Apple',
+        'London'
+        ])
+    end
+
+  end
+
   def load_test_fixture table_name
     File.delete(TEST_FIXTURES)
     data = {
@@ -104,6 +119,11 @@ context 'bulk load:' do
         'table_name;group_name;group_type_name;',
         'groups_group_types;Philip Jones Brass Ensemble;Brass Ensemble;',
         'groups_group_types;The Beatles;Pop Band;',
+      ],
+      :labels => [
+        'table_name;label_name;',
+        'labels;Apple',
+        'labels;London'
       ]
     }
     File.open(TEST_FIXTURES, "a") do |file|
